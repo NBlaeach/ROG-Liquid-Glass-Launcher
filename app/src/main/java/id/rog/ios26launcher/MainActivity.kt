@@ -72,6 +72,7 @@ class MainActivity : Activity() {
 
         val kind = when {
             listOf("phone", "telepon", "dialer").any { key.contains(it) } -> "phone"
+            listOf("whatsapp", "com.whatsapp").any { key.contains(it) } -> "whatsapp"
             listOf("message", "pesan", "sms").any { key.contains(it) } -> "message"
             listOf("camera", "kamera").any { key.contains(it) } -> "camera"
             listOf("chrome", "browser", "internet").any { key.contains(it) } -> "browser"
@@ -89,6 +90,7 @@ class MainActivity : Activity() {
 
         val colors = when (kind) {
             "phone", "message" -> intArrayOf(0xFF55D98D.toInt(), 0xFF08764F.toInt())
+            "whatsapp" -> intArrayOf(0xFF45E477.toInt(), 0xFF079447.toInt())
             "camera" -> intArrayOf(0xFF8795AA.toInt(), 0xFF30394F.toInt())
             "browser" -> intArrayOf(0xFF55C8F2.toInt(), 0xFF2452BD.toInt())
             "settings", "calculator" -> intArrayOf(0xFF9EADC2.toInt(), 0xFF46536A.toInt())
@@ -148,6 +150,26 @@ class MainActivity : Activity() {
                 line.strokeWidth = 7f
 
                 when (kind) {
+                    "whatsapp" -> {
+                        canvas.drawCircle(50f, 48f, 29f, fill)
+                        canvas.drawPath(Path().apply {
+                            moveTo(29f, 70f)
+                            lineTo(25f, 83f)
+                            lineTo(41f, 77f)
+                            close()
+                        }, fill)
+                        val phone = Path().apply {
+                            moveTo(38f, 33f)
+                            cubicTo(33f, 37f, 42f, 57f, 57f, 62f)
+                            cubicTo(63f, 64f, 68f, 57f, 65f, 53f)
+                            lineTo(56f, 47f)
+                            lineTo(50f, 53f)
+                            cubicTo(45f, 50f, 42f, 45f, 42f, 41f)
+                            lineTo(47f, 37f)
+                            close()
+                        }
+                        canvas.drawPath(phone, line)
+                    }
                     "phone" -> {
                         val path = Path().apply {
                             moveTo(31f, 25f)
