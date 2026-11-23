@@ -73,7 +73,21 @@ class MainActivity : Activity() {
         val kind = when {
             listOf("phone", "telepon", "dialer").any { key.contains(it) } -> "phone"
             listOf("whatsapp", "com.whatsapp").any { key.contains(it) } -> "whatsapp"
-            listOf("tiktok", "musically").any { key.contains(it) } -> "tiktok"
+            listOf("tiktok", "musically", "ss.android.ugc.trill").any { key.contains(it) } -> "tiktok"
+            listOf("binance").any { key.contains(it) } -> "binance"
+            listOf("shopee", "com.shopee.id").any { key.contains(it) } -> "shopee"
+            listOf("tokopedia", "com.tokopedia.tkpd").any { key.contains(it) } -> "tokopedia"
+            listOf("termux").any { key.contains(it) } -> "termux"
+            listOf("magisk").any { key.contains(it) } -> "magisk"
+            listOf("root explorer", "speedsoftware").any { key.contains(it) } -> "root"
+            listOf("aida64").any { key.contains(it) } -> "aida"
+            listOf("cpu-z", "cpu_z").any { key.contains(it) } -> "cpuz"
+            listOf("devcheck").any { key.contains(it) } -> "devcheck"
+            listOf("metatrader", "metaquotes").any { key.contains(it) } -> "mt4"
+            listOf("authenticator").any { key.contains(it) } -> "auth"
+            listOf("link2sd").any { key.contains(it) } -> "link2sd"
+            listOf("zedge").any { key.contains(it) } -> "zedge"
+            listOf("pintu").any { key.contains(it) } -> "pintu"
             listOf("message", "pesan", "sms").any { key.contains(it) } -> "message"
             listOf("camera", "kamera").any { key.contains(it) } -> "camera"
             listOf("chrome", "browser", "internet").any { key.contains(it) } -> "browser"
@@ -93,6 +107,20 @@ class MainActivity : Activity() {
             "phone", "message" -> intArrayOf(0xFF55D98D.toInt(), 0xFF08764F.toInt())
             "whatsapp" -> intArrayOf(0xFF45E477.toInt(), 0xFF079447.toInt())
             "tiktok" -> intArrayOf(0xFF252535.toInt(), 0xFF050509.toInt())
+            "binance" -> intArrayOf(0xFF34302A.toInt(), 0xFF111111.toInt())
+            "shopee" -> intArrayOf(0xFFFF9850.toInt(), 0xFFE94B25.toInt())
+            "tokopedia" -> intArrayOf(0xFF58D6A0.toInt(), 0xFF078B60.toInt())
+            "termux" -> intArrayOf(0xFF303C35.toInt(), 0xFF101812.toInt())
+            "magisk" -> intArrayOf(0xFF4B83E8.toInt(), 0xFF172F70.toInt())
+            "root" -> intArrayOf(0xFF5279C9.toInt(), 0xFF182D58.toInt())
+            "aida" -> intArrayOf(0xFF36B9D8.toInt(), 0xFF17466E.toInt())
+            "cpuz" -> intArrayOf(0xFF7188E8.toInt(), 0xFF283A91.toInt())
+            "devcheck" -> intArrayOf(0xFF36C9B0.toInt(), 0xFF126B72.toInt())
+            "mt4" -> intArrayOf(0xFF4C9BDF.toInt(), 0xFF183D78.toInt())
+            "auth" -> intArrayOf(0xFF5599F5.toInt(), 0xFF234A9D.toInt())
+            "link2sd" -> intArrayOf(0xFFAB83E8.toInt(), 0xFF54318D.toInt())
+            "zedge" -> intArrayOf(0xFFE878D0.toInt(), 0xFF7135A9.toInt())
+            "pintu" -> intArrayOf(0xFF55C9D4.toInt(), 0xFF176B9A.toInt())
             "camera" -> intArrayOf(0xFF8795AA.toInt(), 0xFF30394F.toInt())
             "browser" -> intArrayOf(0xFF55C8F2.toInt(), 0xFF2452BD.toInt())
             "settings", "calculator" -> intArrayOf(0xFF9EADC2.toInt(), 0xFF46536A.toInt())
@@ -152,6 +180,151 @@ class MainActivity : Activity() {
                 line.strokeWidth = 7f
 
                 when (kind) {
+                    "binance" -> {
+                        fill.color = Color.rgb(245, 190, 55)
+                        fun diamond(x: Float, y: Float, r: Float) {
+                            canvas.drawPath(Path().apply {
+                                moveTo(x, y - r)
+                                lineTo(x + r, y)
+                                lineTo(x, y + r)
+                                lineTo(x - r, y)
+                                close()
+                            }, fill)
+                        }
+                        diamond(50f, 50f, 10f)
+                        diamond(50f, 30f, 7f)
+                        diamond(50f, 70f, 7f)
+                        diamond(30f, 50f, 7f)
+                        diamond(70f, 50f, 7f)
+                        diamond(36f, 36f, 5f)
+                        diamond(64f, 36f, 5f)
+                        diamond(36f, 64f, 5f)
+                        diamond(64f, 64f, 5f)
+                        fill.color = Color.WHITE
+                    }
+
+                    "shopee" -> {
+                        fill.color = Color.WHITE
+                        canvas.drawRoundRect(27f, 39f, 73f, 78f, 8f, 8f, fill)
+                        line.color = colors[1]
+                        canvas.drawArc(35f, 19f, 65f, 53f, 180f, 180f, false, line)
+                        fill.color = colors[1]
+                        canvas.drawText("S", 39f, 66f, Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = colors[1]; textSize = 27f; isFakeBoldText = true
+                        })
+                    }
+                    "tokopedia" -> {
+                        fill.color = Color.WHITE
+                        canvas.drawRoundRect(25f, 34f, 75f, 77f, 10f, 10f, fill)
+                        line.color = colors[1]
+                        canvas.drawArc(35f, 17f, 65f, 52f, 180f, 180f, false, line)
+                        fill.color = colors[1]
+                        canvas.drawCircle(41f, 52f, 4f, fill)
+                        canvas.drawCircle(59f, 52f, 4f, fill)
+                        canvas.drawArc(39f, 52f, 61f, 69f, 10f, 160f, false, line)
+                    }
+                    "termux" -> {
+                        line.color = Color.rgb(100, 235, 145)
+                        val prompt = Path().apply {
+                            moveTo(27f, 35f); lineTo(48f, 50f); lineTo(27f, 65f)
+                        }
+                        canvas.drawPath(prompt, line)
+                        canvas.drawLine(53f, 65f, 76f, 65f, line)
+                    }
+                    "magisk" -> {
+                        fill.color = Color.WHITE
+                        canvas.drawPath(Path().apply {
+                            moveTo(50f, 20f); lineTo(77f, 34f)
+                            lineTo(72f, 62f); lineTo(50f, 82f)
+                            lineTo(28f, 62f); lineTo(23f, 34f); close()
+                        }, fill)
+                        fill.color = colors[1]
+                        canvas.drawCircle(40f, 48f, 4f, fill)
+                        canvas.drawCircle(60f, 48f, 4f, fill)
+                        canvas.drawLine(40f, 62f, 60f, 62f, line)
+                    }
+                    "root" -> {
+                        fill.color = Color.rgb(255, 194, 75)
+                        canvas.drawPath(Path().apply {
+                            moveTo(17f, 35f); lineTo(42f, 35f)
+                            lineTo(50f, 44f); lineTo(83f, 44f)
+                            lineTo(78f, 75f); lineTo(21f, 75f); close()
+                        }, fill)
+                        line.color = Color.WHITE
+                        canvas.drawLine(27f, 51f, 70f, 51f, line)
+                    }
+                    "aida" -> {
+                        line.color = Color.WHITE
+                        canvas.drawArc(23f, 24f, 77f, 78f, 135f, 270f, false, line)
+                        canvas.drawLine(50f, 51f, 68f, 36f, line)
+                        fill.color = Color.WHITE
+                        canvas.drawCircle(50f, 51f, 5f, fill)
+                    }
+                    "cpuz" -> {
+                        line.color = Color.WHITE
+                        canvas.drawRoundRect(31f, 31f, 69f, 69f, 5f, 5f, line)
+                        for (v in listOf(38f, 50f, 62f)) {
+                            canvas.drawLine(v, 21f, v, 31f, line)
+                            canvas.drawLine(v, 69f, v, 79f, line)
+                            canvas.drawLine(21f, v, 31f, v, line)
+                            canvas.drawLine(69f, v, 79f, v, line)
+                        }
+                        fill.color = Color.WHITE
+                        canvas.drawText("CPU", 34f, 54f, Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = colors[1]; textSize = 13f; isFakeBoldText = true
+                        })
+                    }
+                    "devcheck" -> {
+                        line.color = Color.WHITE
+                        val pulse = Path().apply {
+                            moveTo(18f, 53f); lineTo(34f, 53f)
+                            lineTo(42f, 35f); lineTo(53f, 68f)
+                            lineTo(63f, 44f); lineTo(70f, 53f); lineTo(82f, 53f)
+                        }
+                        canvas.drawPath(pulse, line)
+                    }
+                    "mt4" -> {
+                        line.color = Color.WHITE
+                        canvas.drawLine(22f, 76f, 22f, 27f, line)
+                        canvas.drawLine(22f, 76f, 80f, 76f, line)
+                        fill.color = Color.rgb(90, 230, 160)
+                        canvas.drawRect(32f, 47f, 40f, 66f, fill)
+                        canvas.drawRect(48f, 34f, 56f, 61f, fill)
+                        canvas.drawRect(64f, 24f, 72f, 52f, fill)
+                    }
+                    "auth" -> {
+                        fill.color = Color.WHITE
+                        canvas.drawPath(Path().apply {
+                            moveTo(50f, 19f); lineTo(77f, 30f)
+                            lineTo(73f, 59f); lineTo(50f, 81f)
+                            lineTo(27f, 59f); lineTo(23f, 30f); close()
+                        }, fill)
+                        line.color = colors[1]
+                        val check = Path().apply {
+                            moveTo(37f, 50f); lineTo(46f, 60f); lineTo(65f, 39f)
+                        }
+                        canvas.drawPath(check, line)
+                    }
+                    "link2sd" -> {
+                        line.color = Color.WHITE
+                        canvas.drawRoundRect(20f, 31f, 57f, 61f, 14f, 14f, line)
+                        canvas.drawRoundRect(43f, 43f, 80f, 73f, 14f, 14f, line)
+                        canvas.drawLine(40f, 57f, 60f, 47f, line)
+                    }
+                    "zedge" -> {
+                        line.color = Color.WHITE
+                        val z = Path().apply {
+                            moveTo(26f, 34f); lineTo(75f, 34f)
+                            lineTo(30f, 68f); lineTo(75f, 68f)
+                        }
+                        canvas.drawPath(z, line)
+                    }
+                    "pintu" -> {
+                        line.color = Color.WHITE
+                        canvas.drawRoundRect(29f, 22f, 71f, 78f, 18f, 18f, line)
+                        canvas.drawCircle(50f, 43f, 9f, line)
+                        canvas.drawLine(50f, 52f, 50f, 68f, line)
+                    }
                     "tiktok" -> {
                         val note = Path().apply {
                             moveTo(57f, 23f)
