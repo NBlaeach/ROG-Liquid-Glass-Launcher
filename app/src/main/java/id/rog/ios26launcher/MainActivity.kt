@@ -446,7 +446,7 @@ class MainActivity : Activity() {
                             for (i in 0 until 32) {
                                 val angle = Math.toRadians(i * 11.25 - 90.0)
                                 val radius = when (i % 4) {
-                                    1, 2 -> 34f
+                                    1, 2 -> 35f
                                     else -> 27f
                                 }
                                 val x = 50f + radius * kotlin.math.cos(angle).toFloat()
@@ -455,12 +455,22 @@ class MainActivity : Activity() {
                             }
                             close()
                         }
+                        fill.shader = LinearGradient(
+                            20f, 15f, 80f, 85f,
+                            colors[0], colors[1], Shader.TileMode.CLAMP
+                        )
                         canvas.drawPath(gear, fill)
+                        fill.shader = null
                         fill.color = colors[1]
-                        canvas.drawCircle(50f, 50f, 13f, fill)
-                        fill.color = Color.WHITE
+                        canvas.drawCircle(50f, 50f, 17f, fill)
+                        line.color = Color.WHITE
+                        line.alpha = 210
+                        line.strokeWidth = 2.5f
+                        canvas.drawCircle(50f, 50f, 17f, line)
+                        fill.color = 0xFFEAF4FF.toInt()
+                        canvas.drawCircle(50f, 50f, 8f, fill)
                     }
-                                        "photos" -> {
+                    "photos" -> {
                                             val petalColors = intArrayOf(
                                                 0xFF35B7F1.toInt(), 0xFF5B65D8.toInt(),
                                                 0xFFB45BCB.toInt(), 0xFFEF5D9B.toInt(),
@@ -598,12 +608,43 @@ class MainActivity : Activity() {
                         canvas.drawCircle(63f, 77f, 4f, fill)
                     }
                     "play" -> {
-                        canvas.drawPath(Path().apply {
-                            moveTo(34f, 20f)
-                            lineTo(79f, 50f)
-                            lineTo(34f, 80f)
+                        val green = Path().apply {
+                            moveTo(30f, 20f)
+                            lineTo(57f, 47f)
+                            lineTo(45f, 59f)
+                            lineTo(30f, 50f)
                             close()
-                        }, fill)
+                        }
+                        val yellow = Path().apply {
+                            moveTo(30f, 50f)
+                            lineTo(45f, 59f)
+                            lineTo(57f, 53f)
+                            lineTo(30f, 80f)
+                            close()
+                        }
+                        val blue = Path().apply {
+                            moveTo(57f, 47f)
+                            lineTo(81f, 50f)
+                            lineTo(57f, 53f)
+                            lineTo(49f, 59f)
+                            lineTo(45f, 59f)
+                            close()
+                        }
+                        val red = Path().apply {
+                            moveTo(45f, 59f)
+                            lineTo(57f, 53f)
+                            lineTo(81f, 50f)
+                            lineTo(57f, 66f)
+                            close()
+                        }
+                        fill.color = 0xFF35C978.toInt()
+                        canvas.drawPath(green, fill)
+                        fill.color = 0xFFFFD34E.toInt()
+                        canvas.drawPath(yellow, fill)
+                        fill.color = 0xFF42A5F5.toInt()
+                        canvas.drawPath(blue, fill)
+                        fill.color = 0xFFEF5350.toInt()
+                        canvas.drawPath(red, fill)
                     }
                     else -> {
                         val appDrawable = app.loadIcon(packageManager)
