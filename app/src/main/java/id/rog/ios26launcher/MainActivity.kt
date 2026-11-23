@@ -134,6 +134,36 @@ class MainActivity : Activity() {
             }
         )
 
+        val search = EditText(this).apply {
+            hint = "⌕  Cari aplikasi"
+            setHintTextColor(Color.argb(190, 255, 255, 255))
+            setTextColor(Color.WHITE)
+            textSize = 15f
+            singleLine = true
+            setPadding(dp(18), dp(5), dp(18), dp(5))
+            background = glass()
+        }
+        root.addView(
+            search,
+            LinearLayout.LayoutParams(-1, dp(50)).apply {
+                bottomMargin = dp(8)
+            }
+        )
+
+        val controlButton = Button(this).apply {
+            text = "⚙  CONTROL CENTER"
+            setTextColor(Color.WHITE)
+            background = glass()
+            isAllCaps = false
+            setOnClickListener { showControlCenter() }
+        }
+        root.addView(
+            controlButton,
+            LinearLayout.LayoutParams(-1, dp(48)).apply {
+                bottomMargin = dp(10)
+            }
+        )
+
         val apps = loadApps()
 
         val scroll = ScrollView(this).apply {
@@ -168,6 +198,7 @@ class MainActivity : Activity() {
                 scaleType = ImageView.ScaleType.FIT_CENTER
             }
 
+            cell.tag = app.loadLabel(packageManager).toString().lowercase()
             cell.addView(icon, LinearLayout.LayoutParams(dp(58), dp(58)))
 
             val label = TextView(this).apply {
@@ -194,6 +225,26 @@ class MainActivity : Activity() {
                 }
             )
         }
+
+        search.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(
+                text: CharSequence?, start: Int, count: Int, after: Int
+            ) {}
+
+            override fun onTextChanged(
+                text: CharSequence?, start: Int, before: Int, count: Int
+            ) {
+                val query = text?.toString()?.trim()?.lowercase().orEmpty()
+                for (i in 0 until grid.childCount) {
+                    val cell = grid.getChildAt(i)
+                    cell.visibility =
+                        if (cell.tag.toString().contains(query)) View.VISIBLE
+                        else View.GONE
+                }
+            }
+
+            override fun afterTextChanged(text: android.text.Editable?) {}
+        })
 
         scroll.addView(
             grid,
@@ -250,6 +301,50 @@ class MainActivity : Activity() {
 
         setContentView(root)
         updateClock()
+    }
+
+    private fun showControlCenter() {
+        val panel = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(18), dp(8), dp(18), dp(8))
+            background = glass()
+        }
+
+        val actions = listOf(
+            "Wi-Fi" to android.provider.Settings.ACTION_WIFI_SETTINGS,
+            "Bluetooth" to android.provider.Settings.ACTION_BLUETOOTH_SETTINGS,
+            "Layar" to android.provider.Settings.ACTION_DISPLAY_SETTINGS,
+            "Suara" to android.provider.Settings.ACTION_SOUND_SETTINGS,
+            "Pengaturan Android" to android.provider.Settings.ACTION_SETTINGS
+        )
+
+        actions.forEach { (label, action) ->
+            val button = Button(this).apply {
+                text = label
+                isAllCaps = false
+                setOnClickListener {
+                    try {
+                        startActivity(Intent(action))
+                    } catch (_: Exception) {
+                        startActivity(
+                            Intent(android.provider.Settings.ACTION_SETTINGS)
+                        )
+                    }
+                }
+            }
+            panel.addView(
+                button,
+                LinearLayout.LayoutParams(-1, dp(52)).apply {
+                    bottomMargin = dp(5)
+                }
+            )
+        }
+
+        android.app.AlertDialog.Builder(this)
+            .setTitle("Control Center")
+            .setView(panel)
+            .setNegativeButton("Tutup", null)
+            .show()
     }
 
     private fun chooseDockApps(
