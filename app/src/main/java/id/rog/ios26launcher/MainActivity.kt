@@ -178,7 +178,7 @@ class MainActivity : Activity() {
 
                 fill.shader = LinearGradient(
                     0f, 4f, 0f, 60f,
-                    intArrayOf(0x70FFFFFF, 0x00FFFFFF, 0x12FFFFFF),
+                    intArrayOf(0x30FFFFFF, 0x00FFFFFF, 0x08FFFFFF),
                     null, Shader.TileMode.CLAMP
                 )
                 canvas.drawPath(tilePath, fill)
