@@ -169,7 +169,7 @@ class MainActivity : Activity() {
         val scroll = ScrollView(this).apply {
             isFillViewport = false
             clipToPadding = true
-            setPadding(0, dp(10), 0, 0)
+            setPadding(0, dp(10), 0, dp(90))
             overScrollMode = View.OVER_SCROLL_NEVER
         }
 
