@@ -44,6 +44,19 @@ class MainActivity : Activity() {
             setStroke(dp(1), Color.argb(135, 255, 255, 255))
         }
 
+    private fun iconShine(): GradientDrawable =
+        GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(
+                Color.argb(90, 255, 255, 255),
+                Color.argb(0, 255, 255, 255),
+                Color.argb(24, 90, 160, 255)
+            )
+        ).apply {
+            cornerRadius = dp(17).toFloat()
+            setStroke(dp(1), Color.argb(90, 255, 255, 255))
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.statusBarColor = Color.rgb(18, 39, 91)
@@ -194,6 +207,7 @@ class MainActivity : Activity() {
                 setImageDrawable(app.loadIcon(packageManager))
                 scaleType = ImageView.ScaleType.FIT_CENTER
                 background = rounded(Color.argb(55, 210, 230, 255), 18f)
+                foreground = iconShine()
                 clipToOutline = true
                 setPadding(dp(5), dp(5), dp(5), dp(5))
             }
@@ -279,6 +293,7 @@ class MainActivity : Activity() {
                 setImageDrawable(app.loadIcon(packageManager))
                 scaleType = ImageView.ScaleType.FIT_CENTER
                 setPadding(dp(3), dp(3), dp(3), dp(3))
+                foreground = iconShine()
             }
 
             tile.addView(
