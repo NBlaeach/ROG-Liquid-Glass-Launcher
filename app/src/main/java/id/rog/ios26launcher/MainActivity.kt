@@ -73,6 +73,7 @@ class MainActivity : Activity() {
         val kind = when {
             listOf("phone", "telepon", "dialer").any { key.contains(it) } -> "phone"
             listOf("whatsapp", "com.whatsapp").any { key.contains(it) } -> "whatsapp"
+            listOf("tiktok", "musically").any { key.contains(it) } -> "tiktok"
             listOf("message", "pesan", "sms").any { key.contains(it) } -> "message"
             listOf("camera", "kamera").any { key.contains(it) } -> "camera"
             listOf("chrome", "browser", "internet").any { key.contains(it) } -> "browser"
@@ -91,6 +92,7 @@ class MainActivity : Activity() {
         val colors = when (kind) {
             "phone", "message" -> intArrayOf(0xFF55D98D.toInt(), 0xFF08764F.toInt())
             "whatsapp" -> intArrayOf(0xFF45E477.toInt(), 0xFF079447.toInt())
+            "tiktok" -> intArrayOf(0xFF252535.toInt(), 0xFF050509.toInt())
             "camera" -> intArrayOf(0xFF8795AA.toInt(), 0xFF30394F.toInt())
             "browser" -> intArrayOf(0xFF55C8F2.toInt(), 0xFF2452BD.toInt())
             "settings", "calculator" -> intArrayOf(0xFF9EADC2.toInt(), 0xFF46536A.toInt())
@@ -150,6 +152,30 @@ class MainActivity : Activity() {
                 line.strokeWidth = 7f
 
                 when (kind) {
+                    "tiktok" -> {
+                        val note = Path().apply {
+                            moveTo(57f, 23f)
+                            lineTo(57f, 63f)
+                            cubicTo(57f, 77f, 36f, 81f, 34f, 67f)
+                            cubicTo(32f, 55f, 45f, 49f, 57f, 55f)
+                            moveTo(57f, 25f)
+                            cubicTo(60f, 38f, 67f, 43f, 77f, 44f)
+                        }
+                        line.color = Color.rgb(0, 230, 255)
+                        canvas.save()
+                        canvas.translate(-3f, 1f)
+                        canvas.drawPath(note, line)
+                        canvas.restore()
+                        line.color = Color.rgb(255, 55, 90)
+                        canvas.save()
+                        canvas.translate(3f, -1f)
+                        canvas.drawPath(note, line)
+                        canvas.restore()
+                        line.color = Color.WHITE
+                        canvas.drawPath(note, line)
+                        fill.color = Color.WHITE
+                        canvas.drawCircle(43f, 67f, 8f, fill)
+                    }
                     "whatsapp" -> {
                         canvas.drawCircle(50f, 48f, 29f, fill)
                         canvas.drawPath(Path().apply {
