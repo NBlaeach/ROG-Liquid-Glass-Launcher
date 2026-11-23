@@ -35,13 +35,13 @@ class MainActivity : Activity() {
         GradientDrawable(
             GradientDrawable.Orientation.TL_BR,
             intArrayOf(
-                Color.argb(225, 255, 255, 255),
-                Color.argb(200, 220, 235, 255),
-                Color.argb(215, 180, 205, 255)
+                Color.argb(175, 45, 75, 125),
+                Color.argb(155, 65, 105, 165),
+                Color.argb(185, 30, 55, 105)
             )
         ).apply {
             cornerRadius = dp(30).toFloat()
-            setStroke(dp(1), Color.argb(225, 255, 255, 255))
+            setStroke(dp(1), Color.argb(135, 255, 255, 255))
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -334,7 +334,7 @@ class MainActivity : Activity() {
                 setTextColor(Color.WHITE)
                 textSize = 13f
                 isAllCaps = false
-                background = rounded(Color.argb(105, 255, 255, 255), 18f)
+                background = rounded(Color.argb(75, 190, 215, 255), 18f)
                 setOnClickListener {
                     try {
                         startActivity(Intent(action))
