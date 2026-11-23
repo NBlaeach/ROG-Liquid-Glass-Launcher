@@ -1006,6 +1006,32 @@ class MainActivity : Activity() {
                 background = rounded(
                     Color.argb(100, 115, 155, 215), 20f
                 )
+                elevation = dp(4).toFloat()
+                setOnTouchListener { view, event ->
+                    when (event.actionMasked) {
+                        android.view.MotionEvent.ACTION_DOWN -> {
+                            view.animate()
+                                .scaleX(0.94f)
+                                .scaleY(0.94f)
+                                .alpha(0.86f)
+                                .setDuration(90)
+                                .start()
+                        }
+                        android.view.MotionEvent.ACTION_UP,
+                        android.view.MotionEvent.ACTION_CANCEL -> {
+                            view.animate()
+                                .scaleX(1f)
+                                .scaleY(1f)
+                                .alpha(1f)
+                                .setDuration(180)
+                                .setInterpolator(
+                                    android.view.animation.OvershootInterpolator(1.2f)
+                                )
+                                .start()
+                        }
+                    }
+                    false
+                }
                 setOnClickListener {
                     try {
                         startActivity(Intent(action))
