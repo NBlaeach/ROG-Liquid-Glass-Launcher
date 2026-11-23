@@ -35,9 +35,9 @@ class MainActivity : Activity() {
         GradientDrawable(
             GradientDrawable.Orientation.TL_BR,
             intArrayOf(
-                Color.argb(175, 45, 75, 125),
-                Color.argb(155, 65, 105, 165),
-                Color.argb(185, 30, 55, 105)
+                Color.argb(215, 35, 65, 115),
+                Color.argb(200, 50, 85, 145),
+                Color.argb(220, 25, 45, 90)
             )
         ).apply {
             cornerRadius = dp(30).toFloat()
