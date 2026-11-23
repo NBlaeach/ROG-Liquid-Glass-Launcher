@@ -308,42 +308,133 @@ class MainActivity : Activity() {
     private fun showControlCenter() {
         val panel = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(18), dp(8), dp(18), dp(8))
+            setPadding(dp(18), dp(16), dp(18), dp(12))
             background = glass()
         }
 
-        val actions = listOf(
-            "Wi-Fi" to android.provider.Settings.ACTION_WIFI_SETTINGS,
-            "Bluetooth" to android.provider.Settings.ACTION_BLUETOOTH_SETTINGS,
-            "Layar" to android.provider.Settings.ACTION_DISPLAY_SETTINGS,
-            "Suara" to android.provider.Settings.ACTION_SOUND_SETTINGS,
-            "Pengaturan Android" to android.provider.Settings.ACTION_SETTINGS
-        )
+        val heading = TextView(this).apply {
+            text = "Control Center"
+            setTextColor(Color.WHITE)
+            textSize = 23f
+            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+        }
+        panel.addView(heading)
 
-        actions.forEach { (label, action) ->
-            val button = Button(this).apply {
+        val subtitle = TextView(this).apply {
+            text = "ROG PHONE 5s  •  LIQUID GLASS"
+            setTextColor(Color.argb(190, 255, 255, 255))
+            textSize = 11f
+            setPadding(0, dp(3), 0, dp(14))
+        }
+        panel.addView(subtitle)
+
+        fun makeButton(label: String, action: String): Button {
+            return Button(this).apply {
                 text = label
+                setTextColor(Color.WHITE)
+                textSize = 13f
                 isAllCaps = false
+                background = rounded(Color.argb(65, 255, 255, 255), 18f)
                 setOnClickListener {
                     try {
                         startActivity(Intent(action))
                     } catch (_: Exception) {
-                        startActivity(
-                            Intent(android.provider.Settings.ACTION_SETTINGS)
-                        )
+                        startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))
                     }
                 }
             }
-            panel.addView(
-                button,
-                LinearLayout.LayoutParams(-1, dp(52)).apply {
-                    bottomMargin = dp(5)
-                }
-            )
         }
 
+        fun addPair(left: Pair<String, String>, right: Pair<String, String>) {
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER
+            }
+            row.addView(
+                makeButton(left.first, left.second),
+                LinearLayout.LayoutParams(0, dp(58), 1f).apply {
+                    setMargins(dp(3), dp(3), dp(5), dp(3))
+                }
+            )
+            row.addView(
+                makeButton(right.first, right.second),
+                LinearLayout.LayoutParams(0, dp(58), 1f).apply {
+                    setMargins(dp(5), dp(3), dp(3), dp(3))
+                }
+            )
+            panel.addView(row)
+        }
+
+        addPair(
+            "◉  Wi-Fi" to android.provider.Settings.ACTION_WIFI_SETTINGS,
+            "ᛒ  Bluetooth" to android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
+        )
+        addPair(
+            "✈  Mode pesawat" to android.provider.Settings.ACTION_WIRELESS_SETTINGS,
+            "▣  Layar" to android.provider.Settings.ACTION_DISPLAY_SETTINGS
+        )
+        addPair(
+            "♫  Suara" to android.provider.Settings.ACTION_SOUND_SETTINGS,
+            "⚙  Pengaturan" to android.provider.Settings.ACTION_SETTINGS
+        )
+
+        val brightnessLabel = TextView(this).apply {
+            text = "☀  Kecerahan launcher"
+            setTextColor(Color.WHITE)
+            textSize = 14f
+            setPadding(dp(4), dp(12), 0, 0)
+        }
+        panel.addView(brightnessLabel)
+
+        val brightness = SeekBar(this).apply {
+            max = 100
+            progress = 50
+            progressTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
+            thumbTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
+            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar?, value: Int, fromUser: Boolean) {
+                    val params = window.attributes
+                    params.screenBrightness =
+                        if (value == 0) 0.01f else value / 100f
+                    window.attributes = params
+                }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            })
+        }
+        panel.addView(brightness)
+
+        val audio = getSystemService(AUDIO_SERVICE) as android.media.AudioManager
+        val volumeLabel = TextView(this).apply {
+            text = "♫  Volume media"
+            setTextColor(Color.WHITE)
+            textSize = 14f
+            setPadding(dp(4), dp(8), 0, 0)
+        }
+        panel.addView(volumeLabel)
+
+        val volume = SeekBar(this).apply {
+            max = audio.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)
+            progress = audio.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
+            progressTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
+            thumbTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
+            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar?, value: Int, fromUser: Boolean) {
+                    if (fromUser) {
+                        audio.setStreamVolume(
+                            android.media.AudioManager.STREAM_MUSIC,
+                            value,
+                            0
+                        )
+                    }
+                }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            })
+        }
+        panel.addView(volume)
+
         android.app.AlertDialog.Builder(this)
-            .setTitle("Control Center")
             .setView(panel)
             .setNegativeButton("Tutup", null)
             .show()
