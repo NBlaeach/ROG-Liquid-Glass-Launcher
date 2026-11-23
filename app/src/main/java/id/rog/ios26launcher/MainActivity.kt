@@ -434,10 +434,16 @@ class MainActivity : Activity() {
         }
         panel.addView(volume)
 
-        android.app.AlertDialog.Builder(this)
+        val dialog = android.app.AlertDialog.Builder(this)
             .setView(panel)
             .setNegativeButton("Tutup", null)
-            .show()
+            .create()
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setDimAmount(0.55f)
+        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
+            ?.setTextColor(Color.WHITE)
     }
 
     private fun chooseDockApps(
