@@ -165,6 +165,15 @@ class MainActivity : Activity() {
                     cubicTo(3f, 28f, 28f, 3f, 50f, 3f)
                     close()
                 }
+                // Bayangan tipis untuk memberi kedalaman pada ikon
+                fill.shader = null
+                fill.color = 0x50000000
+                canvas.save()
+                canvas.translate(0f, 2f)
+                canvas.drawPath(tilePath, fill)
+                canvas.restore()
+                fill.color = Color.WHITE
+
                 fill.shader = LinearGradient(
                     8f, 4f, 92f, 96f,
                     colors[0], colors[1], Shader.TileMode.CLAMP
