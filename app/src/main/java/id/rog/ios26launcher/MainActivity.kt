@@ -973,60 +973,74 @@ class MainActivity : Activity() {
     private fun showControlCenter() {
         val panel = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(18), dp(16), dp(18), dp(12))
+            setPadding(dp(18), dp(18), dp(18), dp(14))
             background = glass()
         }
 
         val heading = TextView(this).apply {
             text = "Control Center"
             setTextColor(Color.WHITE)
-            textSize = 23f
+            textSize = 25f
             typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         }
         panel.addView(heading)
 
         val subtitle = TextView(this).apply {
             text = "ROG PHONE 5s  •  LIQUID GLASS"
-            setTextColor(Color.argb(190, 255, 255, 255))
-            textSize = 11f
-            setPadding(0, dp(3), 0, dp(14))
+            setTextColor(Color.argb(175, 255, 255, 255))
+            textSize = 10f
+            letterSpacing = 0.12f
+            setPadding(0, dp(4), 0, dp(17))
         }
         panel.addView(subtitle)
 
-        fun makeButton(label: String, action: String): Button {
+        fun makeTile(label: String, action: String): Button {
             return Button(this).apply {
                 text = label
                 setTextColor(Color.WHITE)
                 textSize = 13f
                 isAllCaps = false
-                background = rounded(Color.argb(75, 190, 215, 255), 18f)
+                gravity = Gravity.CENTER
+                minHeight = dp(62)
+                setPadding(dp(5), dp(8), dp(5), dp(8))
+                background = rounded(
+                    Color.argb(100, 115, 155, 215), 20f
+                )
                 setOnClickListener {
                     try {
                         startActivity(Intent(action))
                     } catch (_: Exception) {
-                        startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))
+                        startActivity(
+                            Intent(android.provider.Settings.ACTION_SETTINGS)
+                        )
                     }
                 }
             }
         }
 
-        fun addPair(left: Pair<String, String>, right: Pair<String, String>) {
+        fun addPair(
+            left: Pair<String, String>,
+            right: Pair<String, String>
+        ) {
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER
             }
+
             row.addView(
-                makeButton(left.first, left.second),
-                LinearLayout.LayoutParams(0, dp(58), 1f).apply {
+                makeTile(left.first, left.second),
+                LinearLayout.LayoutParams(0, dp(66), 1f).apply {
                     setMargins(dp(3), dp(3), dp(5), dp(3))
                 }
             )
+
             row.addView(
-                makeButton(right.first, right.second),
-                LinearLayout.LayoutParams(0, dp(58), 1f).apply {
+                makeTile(right.first, right.second),
+                LinearLayout.LayoutParams(0, dp(66), 1f).apply {
                     setMargins(dp(5), dp(3), dp(3), dp(3))
                 }
             )
+
             panel.addView(row)
         }
 
@@ -1034,70 +1048,119 @@ class MainActivity : Activity() {
             "◉  Wi-Fi" to android.provider.Settings.ACTION_WIFI_SETTINGS,
             "ᛒ  Bluetooth" to android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
         )
+
         addPair(
-            "✈  Mode pesawat" to android.provider.Settings.ACTION_WIRELESS_SETTINGS,
+            "✈  Pesawat" to android.provider.Settings.ACTION_WIRELESS_SETTINGS,
             "▣  Layar" to android.provider.Settings.ACTION_DISPLAY_SETTINGS
         )
+
         addPair(
             "♫  Suara" to android.provider.Settings.ACTION_SOUND_SETTINGS,
             "⚙  Pengaturan" to android.provider.Settings.ACTION_SETTINGS
         )
 
-        val brightnessLabel = TextView(this).apply {
-            text = "☀  Kecerahan launcher"
-            setTextColor(Color.WHITE)
-            textSize = 14f
-            setPadding(dp(4), dp(12), 0, 0)
+        fun addSectionLabel(text: String) {
+            val label = TextView(this).apply {
+                this.text = text
+                setTextColor(Color.WHITE)
+                textSize = 13f
+                typeface = Typeface.create(
+                    "sans-serif-medium", Typeface.NORMAL
+                )
+                setPadding(dp(5), dp(15), 0, dp(5))
+            }
+            panel.addView(label)
         }
-        panel.addView(brightnessLabel)
 
+        fun makeSliderCard(slider: SeekBar): LinearLayout {
+            return LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(dp(12), dp(5), dp(12), dp(5))
+                background = rounded(
+                    Color.argb(75, 145, 180, 230), 18f
+                )
+                addView(
+                    slider,
+                    LinearLayout.LayoutParams(
+                        -1, dp(42)
+                    )
+                )
+            }
+        }
+
+        addSectionLabel("☀  Kecerahan launcher")
+
+        val currentBrightness = window.attributes.screenBrightness
         val brightness = SeekBar(this).apply {
             max = 100
-            progress = 50
-            progressTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
-            thumbTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
-            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar?, value: Int, fromUser: Boolean) {
-                    val params = window.attributes
-                    params.screenBrightness =
-                        if (value == 0) 0.01f else value / 100f
-                    window.attributes = params
+            progress = if (currentBrightness < 0f) {
+                50
+            } else {
+                (currentBrightness * 100).toInt().coerceIn(1, 100)
+            }
+            progressTintList =
+                android.content.res.ColorStateList.valueOf(Color.WHITE)
+            thumbTintList =
+                android.content.res.ColorStateList.valueOf(Color.WHITE)
+
+            setOnSeekBarChangeListener(
+                object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(
+                        seekBar: SeekBar?,
+                        value: Int,
+                        fromUser: Boolean
+                    ) {
+                        val params = window.attributes
+                        params.screenBrightness =
+                            if (value == 0) 0.01f else value / 100f
+                        window.attributes = params
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
                 }
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-            })
+            )
         }
-        panel.addView(brightness)
+        panel.addView(makeSliderCard(brightness))
+
+        addSectionLabel("♫  Volume media")
 
         val audio = getSystemService(AUDIO_SERVICE) as android.media.AudioManager
-        val volumeLabel = TextView(this).apply {
-            text = "♫  Volume media"
-            setTextColor(Color.WHITE)
-            textSize = 14f
-            setPadding(dp(4), dp(8), 0, 0)
-        }
-        panel.addView(volumeLabel)
 
         val volume = SeekBar(this).apply {
-            max = audio.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)
-            progress = audio.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
-            progressTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
-            thumbTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
-            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar?, value: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        audio.setStreamVolume(
-                            android.media.AudioManager.STREAM_MUSIC,
-                            value,
-                            0
-                        )
+            max = audio.getStreamMaxVolume(
+                android.media.AudioManager.STREAM_MUSIC
+            )
+            progress = audio.getStreamVolume(
+                android.media.AudioManager.STREAM_MUSIC
+            )
+            progressTintList =
+                android.content.res.ColorStateList.valueOf(Color.WHITE)
+            thumbTintList =
+                android.content.res.ColorStateList.valueOf(Color.WHITE)
+
+            setOnSeekBarChangeListener(
+                object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(
+                        seekBar: SeekBar?,
+                        value: Int,
+                        fromUser: Boolean
+                    ) {
+                        if (fromUser) {
+                            audio.setStreamVolume(
+                                android.media.AudioManager.STREAM_MUSIC,
+                                value,
+                                0
+                            )
+                        }
                     }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
                 }
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-            })
+            )
         }
-        panel.addView(volume)
+        panel.addView(makeSliderCard(volume))
 
         val dialog = android.app.AlertDialog.Builder(this)
             .setView(panel)
