@@ -427,18 +427,20 @@ class MainActivity : Activity() {
                         canvas.drawCircle(63f, 46f, 3f, fill)
                         fill.color = Color.WHITE
                     }
-                    "camera" -> {
-                        canvas.drawRoundRect(17f, 32f, 83f, 75f, 11f, 11f, fill)
-                        canvas.drawRoundRect(31f, 25f, 49f, 37f, 4f, 4f, fill)
-                        fill.color = colors[1]
-                        canvas.drawCircle(51f, 53f, 15f, fill)
-                        fill.color = Color.WHITE
-                        canvas.drawCircle(51f, 53f, 10f, fill)
-                        fill.color = colors[0]
-                        canvas.drawCircle(51f, 53f, 5f, fill)
-                        fill.color = Color.WHITE
-                        canvas.drawCircle(70f, 41f, 3f, fill)
-                    }
+                                        "camera" -> {
+                                            canvas.drawRoundRect(17f, 32f, 83f, 75f, 12f, 12f, fill)
+                                            canvas.drawRoundRect(31f, 25f, 49f, 37f, 5f, 5f, fill)
+                                            fill.color = 0xFF26364F.toInt()
+                                            canvas.drawCircle(51f, 53f, 16f, fill)
+                                            fill.color = 0xFFDDEBFA.toInt()
+                                            canvas.drawCircle(51f, 53f, 12f, fill)
+                                            fill.color = 0xFF3C91D8.toInt()
+                                            canvas.drawCircle(51f, 53f, 9f, fill)
+                                            fill.color = 0xFF152D50.toInt()
+                                            canvas.drawCircle(51f, 53f, 5f, fill)
+                                            fill.color = Color.WHITE
+                                            canvas.drawCircle(70f, 41f, 3f, fill)
+                                        }
                     "settings" -> {
                         val gear = Path().apply {
                             for (i in 0 until 32) {
@@ -458,50 +460,75 @@ class MainActivity : Activity() {
                         canvas.drawCircle(50f, 50f, 13f, fill)
                         fill.color = Color.WHITE
                     }
-                    "photos" -> {
-                        for (i in 0 until 6) {
-                            val angle = Math.toRadians(i * 60.0)
-                            canvas.drawCircle(
-                                50f + (15f * kotlin.math.cos(angle)).toFloat(),
-                                50f + (15f * kotlin.math.sin(angle)).toFloat(),
-                                11f, fill
-                            )
-                        }
-                        fill.color = colors[1]
-                        canvas.drawCircle(50f, 50f, 7f, fill)
-                        fill.color = Color.WHITE
-                    }
-                    "browser" -> {
-                        canvas.drawCircle(50f, 50f, 30f, line)
-                        canvas.drawOval(36f, 20f, 64f, 80f, line)
-                        canvas.drawLine(21f, 43f, 79f, 43f, line)
-                        canvas.drawLine(21f, 57f, 79f, 57f, line)
-                        val compass = Path().apply {
-                            moveTo(63f, 32f)
-                            lineTo(54f, 55f)
-                            lineTo(36f, 67f)
-                            lineTo(45f, 44f)
-                            close()
-                        }
-                        canvas.drawPath(compass, fill)
-                    }
-                    "clock" -> {
-                        canvas.drawCircle(50f, 50f, 31f, line)
-                        canvas.drawLine(50f, 50f, 50f, 29f, line)
-                        canvas.drawLine(50f, 50f, 67f, 58f, line)
-                        canvas.drawCircle(50f, 50f, 4f, fill)
-                    }
-                    "calendar" -> {
-                        canvas.drawRoundRect(22f, 23f, 78f, 78f, 9f, 9f, line)
-                        canvas.drawLine(22f, 40f, 78f, 40f, line)
-                        canvas.drawLine(36f, 18f, 36f, 31f, line)
-                        canvas.drawLine(64f, 18f, 64f, 31f, line)
-                        canvas.drawCircle(39f, 53f, 3f, fill)
-                        canvas.drawCircle(51f, 53f, 3f, fill)
-                        canvas.drawCircle(63f, 53f, 3f, fill)
-                        canvas.drawCircle(39f, 66f, 3f, fill)
-                        canvas.drawCircle(51f, 66f, 3f, fill)
-                    }
+                                        "photos" -> {
+                                            val petalColors = intArrayOf(
+                                                0xFF35B7F1.toInt(), 0xFF5B65D8.toInt(),
+                                                0xFFB45BCB.toInt(), 0xFFEF5D9B.toInt(),
+                                                0xFFFFA33D.toInt(), 0xFF70C86B.toInt()
+                                            )
+                                            for (i in 0 until 6) {
+                                                val angle = Math.toRadians(i * 60.0 - 90.0)
+                                                fill.color = petalColors[i]
+                                                val x = 50f + 16f * kotlin.math.cos(angle).toFloat()
+                                                val y = 50f + 16f * kotlin.math.sin(angle).toFloat()
+                                                canvas.drawCircle(x, y, 12f, fill)
+                                            }
+                                            fill.color = Color.WHITE
+                                            canvas.drawCircle(50f, 50f, 6f, fill)
+                                        }
+                                        "browser" -> {
+                                            canvas.drawCircle(50f, 50f, 30f, line)
+                                            canvas.drawOval(36f, 20f, 64f, 80f, line)
+                                            canvas.drawLine(21f, 43f, 79f, 43f, line)
+                                            canvas.drawLine(21f, 57f, 79f, 57f, line)
+                                            val compass = Path().apply {
+                                                moveTo(64f, 29f)
+                                                lineTo(55f, 54f)
+                                                lineTo(35f, 70f)
+                                                lineTo(44f, 45f)
+                                                close()
+                                            }
+                                            fill.color = Color.WHITE
+                                            canvas.drawPath(compass, fill)
+                                            fill.color = 0xFFE94E62.toInt()
+                                            val needle = Path().apply {
+                                                moveTo(64f, 29f)
+                                                lineTo(55f, 54f)
+                                                lineTo(49f, 49f)
+                                                close()
+                                            }
+                                            canvas.drawPath(needle, fill)
+                                            fill.color = Color.WHITE
+                                        }
+                                        "clock" -> {
+                                            canvas.drawCircle(50f, 50f, 31f, line)
+                                            for (i in 0 until 12) {
+                                                val angle = Math.toRadians(i * 30.0 - 90.0)
+                                                val x1 = 50f + 25f * kotlin.math.cos(angle).toFloat()
+                                                val y1 = 50f + 25f * kotlin.math.sin(angle).toFloat()
+                                                val x2 = 50f + 28f * kotlin.math.cos(angle).toFloat()
+                                                val y2 = 50f + 28f * kotlin.math.sin(angle).toFloat()
+                                                canvas.drawLine(x1, y1, x2, y2, line)
+                                            }
+                                            canvas.drawLine(50f, 50f, 50f, 29f, line)
+                                            canvas.drawLine(50f, 50f, 67f, 58f, line)
+                                            canvas.drawCircle(50f, 50f, 4f, fill)
+                                        }
+                                        "calendar" -> {
+                                            canvas.drawRoundRect(22f, 23f, 78f, 78f, 9f, 9f, line)
+                                            fill.color = 0xFFE94B58.toInt()
+                                            canvas.drawRoundRect(22f, 23f, 78f, 43f, 9f, 9f, fill)
+                                            canvas.drawRect(22f, 34f, 78f, 43f, fill)
+                                            fill.color = Color.WHITE
+                                            canvas.drawLine(36f, 18f, 36f, 31f, line)
+                                            canvas.drawLine(64f, 18f, 64f, 31f, line)
+                                            for (i in 0 until 3) {
+                                                canvas.drawCircle(37f + i * 13f, 54f, 3f, fill)
+                                            }
+                                            for (i in 0 until 3) {
+                                                canvas.drawCircle(37f + i * 13f, 67f, 3f, fill)
+                                            }
+                                        }
                     "music" -> {
                         val path = Path().apply {
                             moveTo(59f, 26f)
