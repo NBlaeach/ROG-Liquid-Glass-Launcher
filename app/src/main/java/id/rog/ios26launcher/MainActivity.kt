@@ -553,7 +553,7 @@ class MainActivity : Activity() {
                 fill.color = Color.WHITE
                 fill.shader = LinearGradient(
                     12f, 8f, 88f, 72f,
-                    intArrayOf(0x55FFFFFF, 0x18FFFFFF, 0x00FFFFFF),
+                    intArrayOf(0x25FFFFFF, 0x08FFFFFF, 0x00FFFFFF),
                     floatArrayOf(0f, 0.48f, 1f),
                     Shader.TileMode.CLAMP
                 )
@@ -562,7 +562,7 @@ class MainActivity : Activity() {
 
                 fill.shader = LinearGradient(
                     0f, 68f, 0f, 96f,
-                    intArrayOf(0x00FFFFFF, 0x20FFFFFF),
+                    intArrayOf(0x00FFFFFF, 0x0AFFFFFF),
                     null,
                     Shader.TileMode.CLAMP
                 )
