@@ -4,6 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.graphics.Color
+import android.graphics.Shader
+import android.graphics.LinearGradient
+import android.graphics.RectF
+import android.graphics.Path
+import android.graphics.Paint
+import android.graphics.Canvas
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -57,87 +63,247 @@ class MainActivity : Activity() {
             setStroke(dp(1), Color.argb(90, 255, 255, 255))
         }
 
-    private fun liquidIcon(app: ResolveInfo): FrameLayout {
-        val label = app.loadLabel(packageManager).toString().lowercase()
-        val pkg = app.activityInfo.packageName.lowercase()
-        val key = "$label $pkg"
 
-        val (symbol, first, second) = when {
-            listOf("phone", "telepon", "dialer").any { key.contains(it) } ->
-                Triple("☎", 0xFF54D68A.toInt(), 0xFF087B55.toInt())
+    private fun liquidIcon(app: ResolveInfo): View {
+        val key = (
+            app.loadLabel(packageManager).toString() + " " +
+            app.activityInfo.packageName
+        ).lowercase()
 
-            listOf("message", "pesan", "sms").any { key.contains(it) } ->
-                Triple("●", 0xFF55DB91.toInt(), 0xFF087C55.toInt())
-
-            listOf("camera", "kamera").any { key.contains(it) } ->
-                Triple("◉", 0xFF777D91.toInt(), 0xFF252B42.toInt())
-
-            listOf("chrome", "browser", "internet").any { key.contains(it) } ->
-                Triple("◎", 0xFF55B9F5.toInt(), 0xFF2457C8.toInt())
-
-            listOf("setting", "pengaturan").any { key.contains(it) } ->
-                Triple("⚙", 0xFF9BA9BD.toInt(), 0xFF46536B.toInt())
-
-            listOf("photo", "gallery", "galeri").any { key.contains(it) } ->
-                Triple("✿", 0xFFFF8CB5.toInt(), 0xFF8C45C7.toInt())
-
-            listOf("clock", "jam", "alarm").any { key.contains(it) } ->
-                Triple("◷", 0xFF55B9F5.toInt(), 0xFF344E9C.toInt())
-
-            listOf("calendar", "kalender").any { key.contains(it) } ->
-                Triple("▦", 0xFFFF7777.toInt(), 0xFFB92F50.toInt())
-
-            listOf("music", "mus ik", "spotify").any { key.contains(it) } ->
-                Triple("♫", 0xFFFF75B5.toInt(), 0xFF8E287D.toInt())
-
-            listOf("play store", "playstore").any { key.contains(it) } ->
-                Triple("▶", 0xFF55C9E8.toInt(), 0xFF2855B8.toInt())
-
-            listOf("file", "berkas", "manager").any { key.contains(it) } ->
-                Triple("▰", 0xFFFFC05C.toInt(), 0xFFB96726.toInt())
-
-            listOf("contact", "kontak").any { key.contains(it) } ->
-                Triple("●", 0xFF65B8FF.toInt(), 0xFF3854B8.toInt())
-
-            listOf("calculator", "kalkulator").any { key.contains(it) } ->
-                Triple("＋", 0xFF8796B1.toInt(), 0xFF39445E.toInt())
-
-            else -> Triple(
-                label.firstOrNull()?.uppercase() ?: "•",
-                0xFF648DEB.toInt(),
-                0xFF273F91.toInt()
-            )
+        val kind = when {
+            listOf("phone", "telepon", "dialer").any { key.contains(it) } -> "phone"
+            listOf("message", "pesan", "sms").any { key.contains(it) } -> "message"
+            listOf("camera", "kamera").any { key.contains(it) } -> "camera"
+            listOf("chrome", "browser", "internet").any { key.contains(it) } -> "browser"
+            listOf("setting", "pengaturan").any { key.contains(it) } -> "settings"
+            listOf("photo", "gallery", "galeri").any { key.contains(it) } -> "photos"
+            listOf("clock", "jam", "alarm").any { key.contains(it) } -> "clock"
+            listOf("calendar", "kalender").any { key.contains(it) } -> "calendar"
+            listOf("music", "spotify").any { key.contains(it) } -> "music"
+            listOf("file", "berkas", "manager").any { key.contains(it) } -> "files"
+            listOf("contact", "kontak").any { key.contains(it) } -> "contacts"
+            listOf("calculator", "kalkulator").any { key.contains(it) } -> "calculator"
+            listOf("play store", "playstore").any { key.contains(it) } -> "play"
+            else -> "apps"
         }
 
-        return FrameLayout(this).apply {
-            background = GradientDrawable(
-                GradientDrawable.Orientation.TL_BR,
-                intArrayOf(first, second)
-            ).apply {
-                cornerRadius = dp(17).toFloat()
-                setStroke(dp(1), Color.argb(125, 255, 255, 255))
+        val colors = when (kind) {
+            "phone", "message" -> intArrayOf(0xFF55D98D.toInt(), 0xFF08764F.toInt())
+            "camera" -> intArrayOf(0xFF8795AA.toInt(), 0xFF30394F.toInt())
+            "browser" -> intArrayOf(0xFF55C8F2.toInt(), 0xFF2452BD.toInt())
+            "settings", "calculator" -> intArrayOf(0xFF9EADC2.toInt(), 0xFF46536A.toInt())
+            "photos" -> intArrayOf(0xFFFF91B8.toInt(), 0xFF8D48C7.toInt())
+            "clock" -> intArrayOf(0xFF72C8F5.toInt(), 0xFF354D9B.toInt())
+            "calendar" -> intArrayOf(0xFFFF777D.toInt(), 0xFFB82D50.toInt())
+            "music" -> intArrayOf(0xFFFF75B7.toInt(), 0xFF8A287E.toInt())
+            "files" -> intArrayOf(0xFFFFC45D.toInt(), 0xFFB76B28.toInt())
+            "contacts" -> intArrayOf(0xFF70BFFF.toInt(), 0xFF3854B8.toInt())
+            "play" -> intArrayOf(0xFF55D5D0.toInt(), 0xFF2859B7.toInt())
+            else -> intArrayOf(0xFF668FF0.toInt(), 0xFF293D88.toInt())
+        }
+
+        return object : View(this) {
+            private val fill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.WHITE
+                style = Paint.Style.FILL
             }
-            clipToOutline = true
+            private val line = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.WHITE
+                style = Paint.Style.STROKE
+                strokeWidth = 7f
+                strokeCap = Paint.Cap.ROUND
+                strokeJoin = Paint.Join.ROUND
+            }
 
-            addView(
-                TextView(this@MainActivity).apply {
-                    text = symbol
-                    gravity = Gravity.CENTER
-                    textSize = 31f
-                    includeFontPadding = false
-                    setTextColor(Color.WHITE)
-                    typeface = Typeface.create(
-                        "sans-serif-medium", Typeface.NORMAL
-                    )
-                    setShadowLayer(
-                        dp(5).toFloat(), 0f, dp(2).toFloat(),
-                        Color.argb(110, 0, 0, 0)
-                    )
-                },
-                FrameLayout.LayoutParams(-1, -1)
-            )
+            override fun onDraw(canvas: Canvas) {
+                super.onDraw(canvas)
+                val side = minOf(width, height).toFloat()
+                if (side <= 0f) return
 
-            foreground = iconShine()
+                val save = canvas.save()
+                canvas.translate((width - side) / 2f, (height - side) / 2f)
+                canvas.scale(side / 100f, side / 100f)
+
+                val tile = RectF(3f, 3f, 97f, 97f)
+                fill.shader = LinearGradient(
+                    8f, 4f, 92f, 96f,
+                    colors[0], colors[1], Shader.TileMode.CLAMP
+                )
+                canvas.drawRoundRect(tile, 23f, 23f, fill)
+                fill.shader = null
+
+                line.alpha = 180
+                line.strokeWidth = 1.5f
+                canvas.drawRoundRect(tile, 23f, 23f, line)
+
+                fill.shader = LinearGradient(
+                    0f, 4f, 0f, 60f,
+                    intArrayOf(0x70FFFFFF, 0x00FFFFFF, 0x12FFFFFF),
+                    null, Shader.TileMode.CLAMP
+                )
+                canvas.drawRoundRect(tile, 23f, 23f, fill)
+                fill.shader = null
+
+                line.alpha = 235
+                line.strokeWidth = 7f
+
+                when (kind) {
+                    "phone" -> {
+                        val path = Path().apply {
+                            moveTo(31f, 25f)
+                            cubicTo(25f, 27f, 24f, 37f, 32f, 51f)
+                            cubicTo(41f, 67f, 55f, 76f, 69f, 74f)
+                            cubicTo(79f, 72f, 81f, 63f, 75f, 58f)
+                            lineTo(64f, 50f)
+                            lineTo(54f, 60f)
+                            cubicTo(45f, 56f, 40f, 50f, 37f, 42f)
+                            lineTo(46f, 33f)
+                            lineTo(37f, 23f)
+                            close()
+                        }
+                        canvas.drawPath(path, fill)
+                    }
+                    "message" -> {
+                        canvas.drawRoundRect(20f, 23f, 80f, 68f, 17f, 17f, fill)
+                        canvas.drawPath(Path().apply {
+                            moveTo(34f, 65f)
+                            lineTo(29f, 81f)
+                            lineTo(50f, 67f)
+                            close()
+                        }, fill)
+                        fill.color = colors[1]
+                        canvas.drawCircle(37f, 46f, 3f, fill)
+                        canvas.drawCircle(50f, 46f, 3f, fill)
+                        canvas.drawCircle(63f, 46f, 3f, fill)
+                        fill.color = Color.WHITE
+                    }
+                    "camera" -> {
+                        canvas.drawRoundRect(17f, 32f, 83f, 75f, 11f, 11f, fill)
+                        canvas.drawRoundRect(31f, 25f, 49f, 37f, 4f, 4f, fill)
+                        fill.color = colors[1]
+                        canvas.drawCircle(51f, 53f, 15f, fill)
+                        fill.color = Color.WHITE
+                        canvas.drawCircle(51f, 53f, 10f, fill)
+                        fill.color = colors[0]
+                        canvas.drawCircle(51f, 53f, 5f, fill)
+                        fill.color = Color.WHITE
+                        canvas.drawCircle(70f, 41f, 3f, fill)
+                    }
+                    "settings" -> {
+                        for (i in 0 until 8) {
+                            canvas.save()
+                            canvas.rotate(i * 45f, 50f, 50f)
+                            canvas.drawRoundRect(45f, 17f, 55f, 37f, 4f, 4f, fill)
+                            canvas.restore()
+                        }
+                        canvas.drawCircle(50f, 50f, 25f, fill)
+                        fill.color = colors[1]
+                        canvas.drawCircle(50f, 50f, 12f, fill)
+                        fill.color = Color.WHITE
+                    }
+                    "photos" -> {
+                        for (i in 0 until 6) {
+                            val angle = Math.toRadians(i * 60.0)
+                            canvas.drawCircle(
+                                50f + (15f * kotlin.math.cos(angle)).toFloat(),
+                                50f + (15f * kotlin.math.sin(angle)).toFloat(),
+                                11f, fill
+                            )
+                        }
+                        fill.color = colors[1]
+                        canvas.drawCircle(50f, 50f, 7f, fill)
+                        fill.color = Color.WHITE
+                    }
+                    "browser" -> {
+                        canvas.drawCircle(50f, 50f, 30f, line)
+                        canvas.drawOval(36f, 20f, 64f, 80f, line)
+                        canvas.drawLine(21f, 43f, 79f, 43f, line)
+                        canvas.drawLine(21f, 57f, 79f, 57f, line)
+                        val compass = Path().apply {
+                            moveTo(63f, 32f)
+                            lineTo(54f, 55f)
+                            lineTo(36f, 67f)
+                            lineTo(45f, 44f)
+                            close()
+                        }
+                        canvas.drawPath(compass, fill)
+                    }
+                    "clock" -> {
+                        canvas.drawCircle(50f, 50f, 31f, line)
+                        canvas.drawLine(50f, 50f, 50f, 29f, line)
+                        canvas.drawLine(50f, 50f, 67f, 58f, line)
+                        canvas.drawCircle(50f, 50f, 4f, fill)
+                    }
+                    "calendar" -> {
+                        canvas.drawRoundRect(22f, 23f, 78f, 78f, 9f, 9f, line)
+                        canvas.drawLine(22f, 40f, 78f, 40f, line)
+                        canvas.drawLine(36f, 18f, 36f, 31f, line)
+                        canvas.drawLine(64f, 18f, 64f, 31f, line)
+                        canvas.drawCircle(39f, 53f, 3f, fill)
+                        canvas.drawCircle(51f, 53f, 3f, fill)
+                        canvas.drawCircle(63f, 53f, 3f, fill)
+                        canvas.drawCircle(39f, 66f, 3f, fill)
+                        canvas.drawCircle(51f, 66f, 3f, fill)
+                    }
+                    "music" -> {
+                        val path = Path().apply {
+                            moveTo(59f, 26f)
+                            lineTo(59f, 65f)
+                            cubicTo(59f, 77f, 39f, 81f, 37f, 69f)
+                            cubicTo(35f, 58f, 49f, 54f, 59f, 59f)
+                            moveTo(59f, 26f)
+                            lineTo(77f, 22f)
+                            lineTo(77f, 60f)
+                        }
+                        canvas.drawPath(path, line)
+                        canvas.drawLine(59f, 34f, 77f, 30f, line)
+                    }
+                    "files" -> {
+                        canvas.drawPath(Path().apply {
+                            moveTo(17f, 34f)
+                            lineTo(43f, 34f)
+                            lineTo(51f, 43f)
+                            lineTo(83f, 43f)
+                            lineTo(78f, 75f)
+                            lineTo(21f, 75f)
+                            close()
+                        }, fill)
+                    }
+                    "contacts" -> {
+                        canvas.drawCircle(50f, 38f, 13f, fill)
+                        canvas.drawArc(22f, 49f, 78f, 91f, 180f, 180f, true, fill)
+                    }
+                    "calculator" -> {
+                        canvas.drawRoundRect(25f, 17f, 75f, 83f, 8f, 8f, line)
+                        canvas.drawRoundRect(33f, 25f, 67f, 39f, 3f, 3f, fill)
+                        for (y in listOf(50f, 64f, 76f)) {
+                            for (x in listOf(37f, 50f, 63f)) {
+                                canvas.drawCircle(x, y, 3f, fill)
+                            }
+                        }
+                    }
+                    "play" -> {
+                        canvas.drawPath(Path().apply {
+                            moveTo(34f, 20f)
+                            lineTo(79f, 50f)
+                            lineTo(34f, 80f)
+                            close()
+                        }, fill)
+                    }
+                    else -> {
+                        for (y in listOf(36f, 60f)) {
+                            for (x in listOf(36f, 60f)) {
+                                canvas.drawRoundRect(
+                                    x - 8f, y - 8f, x + 8f, y + 8f,
+                                    5f, 5f, fill
+                                )
+                            }
+                        }
+                    }
+                }
+
+                canvas.restoreToCount(save)
+            }
         }
     }
 
