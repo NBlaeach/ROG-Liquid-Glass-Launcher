@@ -21,7 +21,18 @@ jobs:
         with:
           gradle-version: '8.7'
 
+      - name: Prepare signing keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ROG_KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > app/rog-release.jks
+          chmod 600 app/rog-release.jks
+
       - name: Build APK
+        env:
+          ROG_STORE_PASSWORD: ${{ secrets.ROG_STORE_PASSWORD }}
+          ROG_KEY_ALIAS: ${{ secrets.ROG_KEY_ALIAS }}
+          ROG_KEY_PASSWORD: ${{ secrets.ROG_KEY_PASSWORD }}
         run: gradle assembleDebug
 
       - uses: actions/upload-artifact@v4

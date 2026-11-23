@@ -21,5 +21,21 @@ android {
         jvmTarget = "17"
     }
 
+
+    signingConfigs {
+        create("rogRelease") {
+            storeFile = file("rog-release.jks")
+            storePassword = System.getenv("ROG_STORE_PASSWORD") ?: ""
+            keyAlias = System.getenv("ROG_KEY_ALIAS") ?: "roglauncher"
+            keyPassword = System.getenv("ROG_KEY_PASSWORD") ?: ""
+        }
+    }
+
+    buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("rogRelease")
+        }
+    }
+
     buildFeatures { viewBinding = false }
 }
