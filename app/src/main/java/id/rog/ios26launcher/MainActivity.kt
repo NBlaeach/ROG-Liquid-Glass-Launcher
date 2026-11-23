@@ -261,32 +261,34 @@ class MainActivity : Activity() {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
             background = glass()
-            setPadding(dp(9), dp(9), dp(9), dp(9))
+            setPadding(dp(10), dp(9), dp(10), dp(9))
+            clipToOutline = true
         }
 
         dockApps.forEach { app ->
             val tile = FrameLayout(this).apply {
                 background = rounded(
-                    Color.argb(175, 242, 246, 255), 22f
+                    Color.argb(38, 255, 255, 255), 18f
                 )
                 clipToOutline = true
+                contentDescription = app.loadLabel(packageManager).toString()
                 setOnClickListener { launch(app) }
             }
 
             val icon = ImageView(this).apply {
                 setImageDrawable(app.loadIcon(packageManager))
                 scaleType = ImageView.ScaleType.FIT_CENTER
-                setPadding(dp(10), dp(10), dp(10), dp(10))
+                setPadding(dp(3), dp(3), dp(3), dp(3))
             }
 
             tile.addView(
                 icon,
-                FrameLayout.LayoutParams(-1, -1)
+                FrameLayout.LayoutParams(dp(52), dp(52), Gravity.CENTER)
             )
 
             dock.addView(
                 tile,
-                LinearLayout.LayoutParams(0, dp(57), 1f).apply {
+                LinearLayout.LayoutParams(0, dp(60), 1f).apply {
                     setMargins(dp(4), 0, dp(4), 0)
                 }
             )
@@ -294,7 +296,7 @@ class MainActivity : Activity() {
 
         root.addView(
             dock,
-            LinearLayout.LayoutParams(-1, dp(76)).apply {
+            LinearLayout.LayoutParams(-1, dp(78)).apply {
                 topMargin = dp(12)
             }
         )
