@@ -190,16 +190,11 @@ class MainActivity : Activity() {
 
             val icon = ImageView(this).apply {
                 setImageDrawable(app.loadIcon(packageManager))
-                background = rounded(
-                    Color.argb(235, 244, 247, 255), 19f
-                )
-                clipToOutline = true
-                setPadding(dp(10), dp(10), dp(10), dp(10))
                 scaleType = ImageView.ScaleType.FIT_CENTER
             }
 
             cell.tag = app.loadLabel(packageManager).toString().lowercase()
-            cell.addView(icon, LinearLayout.LayoutParams(dp(58), dp(58)))
+            cell.addView(icon, LinearLayout.LayoutParams(dp(62), dp(62)))
 
             val label = TextView(this).apply {
                 text = app.loadLabel(packageManager).toString()
