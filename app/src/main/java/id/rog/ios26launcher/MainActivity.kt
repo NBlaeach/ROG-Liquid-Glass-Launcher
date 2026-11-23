@@ -387,28 +387,40 @@ class MainActivity : Activity() {
                         canvas.drawPath(phone, line)
                     }
                     "phone" -> {
-                        val path = Path().apply {
-                            moveTo(31f, 25f)
-                            cubicTo(25f, 27f, 24f, 37f, 32f, 51f)
-                            cubicTo(41f, 67f, 55f, 76f, 69f, 74f)
-                            cubicTo(79f, 72f, 81f, 63f, 75f, 58f)
-                            lineTo(64f, 50f)
-                            lineTo(54f, 60f)
-                            cubicTo(45f, 56f, 40f, 50f, 37f, 42f)
-                            lineTo(46f, 33f)
-                            lineTo(37f, 23f)
+                        val handset = Path().apply {
+                            moveTo(34f, 23f)
+                            cubicTo(30f, 23f, 26f, 27f, 27f, 33f)
+                            cubicTo(30f, 54f, 46f, 70f, 67f, 74f)
+                            cubicTo(73f, 75f, 78f, 71f, 78f, 65f)
+                            cubicTo(78f, 63f, 77f, 61f, 75f, 60f)
+                            lineTo(64f, 52f)
+                            cubicTo(62f, 50f, 59f, 51f, 57f, 53f)
+                            lineTo(51f, 59f)
+                            cubicTo(43f, 55f, 38f, 49f, 35f, 41f)
+                            lineTo(41f, 35f)
+                            cubicTo(43f, 33f, 43f, 30f, 41f, 28f)
+                            lineTo(37f, 24f)
+                            cubicTo(36f, 23f, 35f, 23f, 34f, 23f)
                             close()
                         }
-                        canvas.drawPath(path, fill)
+                        canvas.drawPath(handset, fill)
                     }
                     "message" -> {
-                        canvas.drawRoundRect(20f, 23f, 80f, 68f, 17f, 17f, fill)
-                        canvas.drawPath(Path().apply {
-                            moveTo(34f, 65f)
+                        val bubble = Path().apply {
+                            moveTo(36f, 22f)
+                            lineTo(64f, 22f)
+                            cubicTo(74f, 22f, 80f, 29f, 80f, 39f)
+                            lineTo(80f, 53f)
+                            cubicTo(80f, 63f, 74f, 69f, 64f, 69f)
+                            lineTo(46f, 69f)
                             lineTo(29f, 81f)
-                            lineTo(50f, 67f)
+                            lineTo(33f, 66f)
+                            cubicTo(25f, 63f, 20f, 57f, 20f, 48f)
+                            lineTo(20f, 39f)
+                            cubicTo(20f, 29f, 26f, 22f, 36f, 22f)
                             close()
-                        }, fill)
+                        }
+                        canvas.drawPath(bubble, fill)
                         fill.color = colors[1]
                         canvas.drawCircle(37f, 46f, 3f, fill)
                         canvas.drawCircle(50f, 46f, 3f, fill)
