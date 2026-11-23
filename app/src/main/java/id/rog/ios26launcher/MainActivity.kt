@@ -59,32 +59,84 @@ class MainActivity : Activity() {
 
     private fun liquidIcon(app: ResolveInfo): FrameLayout {
         val label = app.loadLabel(packageManager).toString().lowercase()
-        val palettes = arrayOf(
-            intArrayOf(0xFF3478F6.toInt(), 0xFF142F85.toInt()),
-            intArrayOf(0xFF27B8D8.toInt(), 0xFF07528C.toInt()),
-            intArrayOf(0xFF9B68E8.toInt(), 0xFF49318D.toInt()),
-            intArrayOf(0xFFFF9B45.toInt(), 0xFFB93D35.toInt()),
-            intArrayOf(0xFF42C98A.toInt(), 0xFF08734D.toInt()),
-            intArrayOf(0xFFE86B9A.toInt(), 0xFF9A285C.toInt())
-        )
-        val colors = palettes[(label.hashCode() and 0x7fffffff) % palettes.size]
+        val pkg = app.activityInfo.packageName.lowercase()
+        val key = "$label $pkg"
+
+        val (symbol, first, second) = when {
+            listOf("phone", "telepon", "dialer").any { key.contains(it) } ->
+                Triple("☎", 0xFF54D68A.toInt(), 0xFF087B55.toInt())
+
+            listOf("message", "pesan", "sms").any { key.contains(it) } ->
+                Triple("●", 0xFF55DB91.toInt(), 0xFF087C55.toInt())
+
+            listOf("camera", "kamera").any { key.contains(it) } ->
+                Triple("◉", 0xFF777D91.toInt(), 0xFF252B42.toInt())
+
+            listOf("chrome", "browser", "internet").any { key.contains(it) } ->
+                Triple("◎", 0xFF55B9F5.toInt(), 0xFF2457C8.toInt())
+
+            listOf("setting", "pengaturan").any { key.contains(it) } ->
+                Triple("⚙", 0xFF9BA9BD.toInt(), 0xFF46536B.toInt())
+
+            listOf("photo", "gallery", "galeri").any { key.contains(it) } ->
+                Triple("✿", 0xFFFF8CB5.toInt(), 0xFF8C45C7.toInt())
+
+            listOf("clock", "jam", "alarm").any { key.contains(it) } ->
+                Triple("◷", 0xFF55B9F5.toInt(), 0xFF344E9C.toInt())
+
+            listOf("calendar", "kalender").any { key.contains(it) } ->
+                Triple("▦", 0xFFFF7777.toInt(), 0xFFB92F50.toInt())
+
+            listOf("music", "mus ik", "spotify").any { key.contains(it) } ->
+                Triple("♫", 0xFFFF75B5.toInt(), 0xFF8E287D.toInt())
+
+            listOf("play store", "playstore").any { key.contains(it) } ->
+                Triple("▶", 0xFF55C9E8.toInt(), 0xFF2855B8.toInt())
+
+            listOf("file", "berkas", "manager").any { key.contains(it) } ->
+                Triple("▰", 0xFFFFC05C.toInt(), 0xFFB96726.toInt())
+
+            listOf("contact", "kontak").any { key.contains(it) } ->
+                Triple("●", 0xFF65B8FF.toInt(), 0xFF3854B8.toInt())
+
+            listOf("calculator", "kalkulator").any { key.contains(it) } ->
+                Triple("＋", 0xFF8796B1.toInt(), 0xFF39445E.toInt())
+
+            else -> Triple(
+                label.firstOrNull()?.uppercase() ?: "•",
+                0xFF648DEB.toInt(),
+                0xFF273F91.toInt()
+            )
+        }
 
         return FrameLayout(this).apply {
             background = GradientDrawable(
-                GradientDrawable.Orientation.TL_BR, colors
+                GradientDrawable.Orientation.TL_BR,
+                intArrayOf(first, second)
             ).apply {
                 cornerRadius = dp(17).toFloat()
-                setStroke(dp(1), Color.argb(100, 255, 255, 255))
+                setStroke(dp(1), Color.argb(125, 255, 255, 255))
             }
             clipToOutline = true
+
             addView(
-                ImageView(this@MainActivity).apply {
-                    setImageDrawable(app.loadIcon(packageManager))
-                    scaleType = ImageView.ScaleType.FIT_CENTER
-                    setPadding(dp(5), dp(5), dp(5), dp(5))
+                TextView(this@MainActivity).apply {
+                    text = symbol
+                    gravity = Gravity.CENTER
+                    textSize = 31f
+                    includeFontPadding = false
+                    setTextColor(Color.WHITE)
+                    typeface = Typeface.create(
+                        "sans-serif-medium", Typeface.NORMAL
+                    )
+                    setShadowLayer(
+                        dp(5).toFloat(), 0f, dp(2).toFloat(),
+                        Color.argb(110, 0, 0, 0)
+                    )
                 },
                 FrameLayout.LayoutParams(-1, -1)
             )
+
             foreground = iconShine()
         }
     }
