@@ -512,14 +512,34 @@ class MainActivity : Activity() {
                         }, fill)
                     }
                     else -> {
-                        for (y in listOf(36f, 60f)) {
-                            for (x in listOf(36f, 60f)) {
-                                canvas.drawRoundRect(
-                                    x - 8f, y - 8f, x + 8f, y + 8f,
-                                    5f, 5f, fill
-                                )
-                            }
+                        val appDrawable = app.loadIcon(packageManager)
+                        val iconRect = RectF(5f, 5f, 95f, 95f)
+                        val iconSave = canvas.save()
+                        val iconClip = Path().apply {
+                            addRoundRect(
+                                iconRect, 22f, 22f, Path.Direction.CW
+                            )
                         }
+                        canvas.clipPath(iconClip)
+                        appDrawable.setBounds(5, 5, 95, 95)
+                        appDrawable.draw(canvas)
+                        canvas.restoreToCount(iconSave)
+
+                        fill.color = Color.WHITE
+                        fill.shader = LinearGradient(
+                            0f, 5f, 0f, 65f,
+                            intArrayOf(0x48FFFFFF, 0x08FFFFFF, 0x00FFFFFF),
+                            null, Shader.TileMode.CLAMP
+                        )
+                        canvas.drawRoundRect(iconRect, 22f, 22f, fill)
+                        fill.shader = null
+
+                        line.color = Color.WHITE
+                        line.alpha = 125
+                        line.strokeWidth = 1.5f
+                        canvas.drawRoundRect(iconRect, 22f, 22f, line)
+                        line.alpha = 235
+                        line.strokeWidth = 7f
                     }
                 }
 
