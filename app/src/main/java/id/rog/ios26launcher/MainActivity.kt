@@ -169,6 +169,7 @@ class MainActivity : Activity() {
         val scroll = ScrollView(this).apply {
             isFillViewport = false
             clipToPadding = true
+            isVerticalScrollBarEnabled = false
             setPadding(0, dp(10), 0, dp(90))
             overScrollMode = View.OVER_SCROLL_NEVER
         }
@@ -183,7 +184,7 @@ class MainActivity : Activity() {
             val cell = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
-                setPadding(dp(3), dp(7), dp(3), dp(9))
+                setPadding(dp(3), dp(4), dp(3), dp(5))
                 isClickable = true
                 isFocusable = true
                 setOnClickListener { launch(app) }
@@ -195,19 +196,19 @@ class MainActivity : Activity() {
             }
 
             cell.tag = app.loadLabel(packageManager).toString().lowercase()
-            cell.addView(icon, LinearLayout.LayoutParams(dp(62), dp(62)))
+            cell.addView(icon, LinearLayout.LayoutParams(dp(58), dp(58)))
 
             val label = TextView(this).apply {
                 text = app.loadLabel(packageManager).toString()
                 setTextColor(Color.WHITE)
-                textSize = 11f
+                textSize = 10.5f
                 gravity = Gravity.CENTER
                 maxLines = 1
                 ellipsize = android.text.TextUtils.TruncateAt.END
             }
             cell.addView(
                 label,
-                LinearLayout.LayoutParams(-1, dp(25))
+                LinearLayout.LayoutParams(-1, dp(24))
             )
 
             grid.addView(
