@@ -35,13 +35,13 @@ class MainActivity : Activity() {
         GradientDrawable(
             GradientDrawable.Orientation.TL_BR,
             intArrayOf(
-                Color.argb(115, 255, 255, 255),
-                Color.argb(38, 220, 235, 255),
-                Color.argb(75, 180, 205, 255)
+                Color.argb(155, 255, 255, 255),
+                Color.argb(105, 220, 235, 255),
+                Color.argb(130, 180, 205, 255)
             )
         ).apply {
             cornerRadius = dp(30).toFloat()
-            setStroke(dp(1), Color.argb(115, 255, 255, 255))
+            setStroke(dp(1), Color.argb(155, 255, 255, 255))
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -440,8 +440,17 @@ class MainActivity : Activity() {
             .create()
 
         dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        dialog.window?.setDimAmount(0.55f)
+
+        dialog.window?.apply {
+            setBackgroundDrawableResource(android.R.color.transparent)
+            setDimAmount(0.38f)
+
+            if (android.os.Build.VERSION.SDK_INT >= 31) {
+                addFlags(android.view.WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+                setBackgroundBlurRadius(dp(28))
+            }
+        }
+
         dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
             ?.setTextColor(Color.WHITE)
     }
