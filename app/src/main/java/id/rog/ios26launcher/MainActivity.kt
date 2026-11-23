@@ -159,10 +159,10 @@ class MainActivity : Activity() {
                 val tile = RectF(3f, 3f, 97f, 97f)
                 val tilePath = Path().apply {
                     moveTo(50f, 3f)
-                    cubicTo(78f, 3f, 97f, 22f, 97f, 50f)
-                    cubicTo(97f, 78f, 78f, 97f, 50f, 97f)
-                    cubicTo(22f, 97f, 3f, 78f, 3f, 50f)
-                    cubicTo(3f, 22f, 22f, 3f, 50f, 3f)
+                    cubicTo(72f, 3f, 97f, 28f, 97f, 50f)
+                    cubicTo(97f, 72f, 72f, 97f, 50f, 97f)
+                    cubicTo(28f, 97f, 3f, 72f, 3f, 50f)
+                    cubicTo(3f, 28f, 28f, 3f, 50f, 3f)
                     close()
                 }
                 fill.shader = LinearGradient(
