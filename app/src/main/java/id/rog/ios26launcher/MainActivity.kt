@@ -278,9 +278,7 @@ class MainActivity : Activity() {
             val icon = ImageView(this).apply {
                 setImageDrawable(app.loadIcon(packageManager))
                 scaleType = ImageView.ScaleType.FIT_CENTER
-                background = rounded(Color.argb(55, 210, 230, 255), 18f)
-                clipToOutline = true
-                setPadding(dp(5), dp(5), dp(5), dp(5))
+                setPadding(dp(3), dp(3), dp(3), dp(3))
             }
 
             tile.addView(
