@@ -157,23 +157,31 @@ class MainActivity : Activity() {
                 canvas.scale(side / 100f, side / 100f)
 
                 val tile = RectF(3f, 3f, 97f, 97f)
+                val tilePath = Path().apply {
+                    moveTo(50f, 3f)
+                    cubicTo(78f, 3f, 97f, 22f, 97f, 50f)
+                    cubicTo(97f, 78f, 78f, 97f, 50f, 97f)
+                    cubicTo(22f, 97f, 3f, 78f, 3f, 50f)
+                    cubicTo(3f, 22f, 22f, 3f, 50f, 3f)
+                    close()
+                }
                 fill.shader = LinearGradient(
                     8f, 4f, 92f, 96f,
                     colors[0], colors[1], Shader.TileMode.CLAMP
                 )
-                canvas.drawRoundRect(tile, 23f, 23f, fill)
+                canvas.drawPath(tilePath, fill)
                 fill.shader = null
 
                 line.alpha = 180
                 line.strokeWidth = 1.5f
-                canvas.drawRoundRect(tile, 23f, 23f, line)
+                canvas.drawPath(tilePath, line)
 
                 fill.shader = LinearGradient(
                     0f, 4f, 0f, 60f,
                     intArrayOf(0x70FFFFFF, 0x00FFFFFF, 0x12FFFFFF),
                     null, Shader.TileMode.CLAMP
                 )
-                canvas.drawRoundRect(tile, 23f, 23f, fill)
+                canvas.drawPath(tilePath, fill)
                 fill.shader = null
 
                 line.alpha = 235
@@ -548,7 +556,7 @@ class MainActivity : Activity() {
                 val glassClip = Path().apply {
                     addRoundRect(tile, 23f, 23f, Path.Direction.CW)
                 }
-                canvas.clipPath(glassClip)
+                canvas.clipPath(tilePath)
 
                 fill.color = Color.WHITE
                 fill.shader = LinearGradient(
@@ -557,7 +565,7 @@ class MainActivity : Activity() {
                     floatArrayOf(0f, 0.48f, 1f),
                     Shader.TileMode.CLAMP
                 )
-                canvas.drawRoundRect(tile, 23f, 23f, fill)
+                canvas.drawPath(tilePath, fill)
                 fill.shader = null
 
                 fill.shader = LinearGradient(
@@ -566,15 +574,13 @@ class MainActivity : Activity() {
                     null,
                     Shader.TileMode.CLAMP
                 )
-                canvas.drawRoundRect(tile, 23f, 23f, fill)
+                canvas.drawPath(tilePath, fill)
                 fill.shader = null
 
                 line.color = Color.WHITE
                 line.alpha = 115
                 line.strokeWidth = 1.4f
-                canvas.drawRoundRect(
-                    RectF(4f, 4f, 96f, 96f), 23f, 23f, line
-                )
+                canvas.drawPath(tilePath, line)
                 line.alpha = 235
                 line.strokeWidth = 7f
 
