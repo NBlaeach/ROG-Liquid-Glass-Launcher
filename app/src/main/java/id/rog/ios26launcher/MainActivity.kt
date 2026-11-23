@@ -57,6 +57,38 @@ class MainActivity : Activity() {
             setStroke(dp(1), Color.argb(90, 255, 255, 255))
         }
 
+    private fun liquidIcon(app: ResolveInfo): FrameLayout {
+        val label = app.loadLabel(packageManager).toString().lowercase()
+        val palettes = arrayOf(
+            intArrayOf(0xFF3478F6.toInt(), 0xFF142F85.toInt()),
+            intArrayOf(0xFF27B8D8.toInt(), 0xFF07528C.toInt()),
+            intArrayOf(0xFF9B68E8.toInt(), 0xFF49318D.toInt()),
+            intArrayOf(0xFFFF9B45.toInt(), 0xFFB93D35.toInt()),
+            intArrayOf(0xFF42C98A.toInt(), 0xFF08734D.toInt()),
+            intArrayOf(0xFFE86B9A.toInt(), 0xFF9A285C.toInt())
+        )
+        val colors = palettes[(label.hashCode() and 0x7fffffff) % palettes.size]
+
+        return FrameLayout(this).apply {
+            background = GradientDrawable(
+                GradientDrawable.Orientation.TL_BR, colors
+            ).apply {
+                cornerRadius = dp(17).toFloat()
+                setStroke(dp(1), Color.argb(100, 255, 255, 255))
+            }
+            clipToOutline = true
+            addView(
+                ImageView(this@MainActivity).apply {
+                    setImageDrawable(app.loadIcon(packageManager))
+                    scaleType = ImageView.ScaleType.FIT_CENTER
+                    setPadding(dp(5), dp(5), dp(5), dp(5))
+                },
+                FrameLayout.LayoutParams(-1, -1)
+            )
+            foreground = iconShine()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.statusBarColor = Color.rgb(18, 39, 91)
@@ -203,17 +235,11 @@ class MainActivity : Activity() {
                 setOnClickListener { launch(app) }
             }
 
-            val icon = ImageView(this).apply {
-                setImageDrawable(app.loadIcon(packageManager))
-                scaleType = ImageView.ScaleType.FIT_CENTER
-                background = rounded(Color.argb(55, 210, 230, 255), 18f)
-                foreground = iconShine()
-                clipToOutline = true
-                setPadding(dp(5), dp(5), dp(5), dp(5))
-            }
-
             cell.tag = app.loadLabel(packageManager).toString().lowercase()
-            cell.addView(icon, LinearLayout.LayoutParams(dp(58), dp(58)))
+            cell.addView(
+                liquidIcon(app),
+                LinearLayout.LayoutParams(dp(58), dp(58))
+            )
 
             val label = TextView(this).apply {
                 text = app.loadLabel(packageManager).toString()
@@ -289,14 +315,8 @@ class MainActivity : Activity() {
                 setOnClickListener { launch(app) }
             }
 
-            val icon = ImageView(this).apply {
-                setImageDrawable(app.loadIcon(packageManager))
-                scaleType = ImageView.ScaleType.FIT_CENTER
-                setPadding(dp(3), dp(3), dp(3), dp(3))
-            }
-
             tile.addView(
-                icon,
+                liquidIcon(app),
                 FrameLayout.LayoutParams(dp(52), dp(52), Gravity.CENTER)
             )
 
