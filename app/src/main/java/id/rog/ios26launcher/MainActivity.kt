@@ -293,7 +293,6 @@ class MainActivity : Activity() {
                 setImageDrawable(app.loadIcon(packageManager))
                 scaleType = ImageView.ScaleType.FIT_CENTER
                 setPadding(dp(3), dp(3), dp(3), dp(3))
-                foreground = iconShine()
             }
 
             tile.addView(
