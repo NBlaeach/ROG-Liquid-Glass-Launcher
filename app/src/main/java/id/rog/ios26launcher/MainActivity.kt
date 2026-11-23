@@ -543,6 +543,42 @@ class MainActivity : Activity() {
                     }
                 }
 
+                // Liquid Glass overlay untuk semua ikon
+                val glassSave = canvas.save()
+                val glassClip = Path().apply {
+                    addRoundRect(tile, 23f, 23f, Path.Direction.CW)
+                }
+                canvas.clipPath(glassClip)
+
+                fill.color = Color.WHITE
+                fill.shader = LinearGradient(
+                    12f, 8f, 88f, 72f,
+                    intArrayOf(0x55FFFFFF, 0x18FFFFFF, 0x00FFFFFF),
+                    floatArrayOf(0f, 0.48f, 1f),
+                    Shader.TileMode.CLAMP
+                )
+                canvas.drawRoundRect(tile, 23f, 23f, fill)
+                fill.shader = null
+
+                fill.shader = LinearGradient(
+                    0f, 68f, 0f, 96f,
+                    intArrayOf(0x00FFFFFF, 0x20FFFFFF),
+                    null,
+                    Shader.TileMode.CLAMP
+                )
+                canvas.drawRoundRect(tile, 23f, 23f, fill)
+                fill.shader = null
+
+                line.color = Color.WHITE
+                line.alpha = 115
+                line.strokeWidth = 1.4f
+                canvas.drawRoundRect(
+                    RectF(4f, 4f, 96f, 96f), 23f, 23f, line
+                )
+                line.alpha = 235
+                line.strokeWidth = 7f
+
+                canvas.restoreToCount(glassSave)
                 canvas.restoreToCount(save)
             }
         }
