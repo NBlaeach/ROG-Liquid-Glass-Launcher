@@ -1167,6 +1167,10 @@ class MainActivity : Activity() {
             .setNegativeButton("Tutup", null)
             .create()
 
+        panel.alpha = 0f
+        panel.scaleX = 0.88f
+        panel.scaleY = 0.88f
+
         dialog.show()
 
         dialog.window?.apply {
@@ -1179,8 +1183,33 @@ class MainActivity : Activity() {
             }
         }
 
-        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
-            ?.setTextColor(Color.WHITE)
+        panel.animate()
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(320)
+            .setInterpolator(
+                android.view.animation.DecelerateInterpolator(1.7f)
+            )
+            .start()
+
+        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
+            setTextColor(Color.WHITE)
+            setOnClickListener {
+                panel.animate()
+                    .alpha(0f)
+                    .scaleX(0.92f)
+                    .scaleY(0.92f)
+                    .setDuration(180)
+                    .setInterpolator(
+                        android.view.animation.DecelerateInterpolator()
+                    )
+                    .withEndAction {
+                        dialog.dismiss()
+                    }
+                    .start()
+            }
+        }
     }
 
     private fun chooseDockApps(
