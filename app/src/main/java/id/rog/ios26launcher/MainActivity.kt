@@ -28,20 +28,20 @@ class MainActivity : Activity() {
         GradientDrawable().apply {
             setColor(color)
             cornerRadius = dp(radius.toInt()).toFloat()
-            setStroke(dp(1), Color.argb(65, 255, 255, 255))
+            setStroke(dp(1), Color.argb(105, 255, 255, 255))
         }
 
     private fun glass(): GradientDrawable =
         GradientDrawable(
             GradientDrawable.Orientation.TL_BR,
             intArrayOf(
-                Color.argb(155, 255, 255, 255),
-                Color.argb(105, 220, 235, 255),
-                Color.argb(130, 180, 205, 255)
+                Color.argb(225, 255, 255, 255),
+                Color.argb(200, 220, 235, 255),
+                Color.argb(215, 180, 205, 255)
             )
         ).apply {
             cornerRadius = dp(30).toFloat()
-            setStroke(dp(1), Color.argb(155, 255, 255, 255))
+            setStroke(dp(1), Color.argb(225, 255, 255, 255))
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -334,7 +334,7 @@ class MainActivity : Activity() {
                 setTextColor(Color.WHITE)
                 textSize = 13f
                 isAllCaps = false
-                background = rounded(Color.argb(65, 255, 255, 255), 18f)
+                background = rounded(Color.argb(105, 255, 255, 255), 18f)
                 setOnClickListener {
                     try {
                         startActivity(Intent(action))
