@@ -530,41 +530,72 @@ class MainActivity : Activity() {
                                             }
                                         }
                     "music" -> {
-                        val path = Path().apply {
-                            moveTo(59f, 26f)
-                            lineTo(59f, 65f)
-                            cubicTo(59f, 77f, 39f, 81f, 37f, 69f)
-                            cubicTo(35f, 58f, 49f, 54f, 59f, 59f)
-                            moveTo(59f, 26f)
-                            lineTo(77f, 22f)
-                            lineTo(77f, 60f)
+                        fill.color = Color.WHITE
+                        val note = Path().apply {
+                            moveTo(60f, 25f)
+                            lineTo(60f, 66f)
+                            cubicTo(60f, 78f, 40f, 82f, 37f, 70f)
+                            cubicTo(34f, 59f, 49f, 54f, 60f, 61f)
+                            moveTo(60f, 25f)
+                            lineTo(79f, 20f)
+                            lineTo(79f, 59f)
+                            lineTo(60f, 64f)
                         }
-                        canvas.drawPath(path, line)
-                        canvas.drawLine(59f, 34f, 77f, 30f, line)
+                        line.color = Color.WHITE
+                        line.strokeWidth = 7f
+                        line.strokeCap = Paint.Cap.ROUND
+                        line.strokeJoin = Paint.Join.ROUND
+                        canvas.drawPath(note, line)
+                        canvas.drawCircle(47f, 69f, 8f, fill)
+                        canvas.drawCircle(68f, 62f, 8f, fill)
                     }
                     "files" -> {
-                        canvas.drawPath(Path().apply {
-                            moveTo(17f, 34f)
-                            lineTo(43f, 34f)
-                            lineTo(51f, 43f)
-                            lineTo(83f, 43f)
-                            lineTo(78f, 75f)
-                            lineTo(21f, 75f)
+                        fill.color = 0xFFFFD66B.toInt()
+                        canvas.drawRoundRect(17f, 34f, 83f, 77f, 9f, 9f, fill)
+                        val folder = Path().apply {
+                            moveTo(17f, 39f)
+                            lineTo(17f, 30f)
+                            cubicTo(17f, 27f, 20f, 26f, 23f, 26f)
+                            lineTo(43f, 26f)
+                            lineTo(52f, 36f)
+                            lineTo(77f, 36f)
+                            cubicTo(82f, 36f, 84f, 40f, 83f, 45f)
+                            lineTo(77f, 73f)
+                            lineTo(22f, 73f)
                             close()
-                        }, fill)
+                        }
+                        fill.shader = LinearGradient(
+                            20f, 28f, 75f, 76f,
+                            0xFFFFE69A.toInt(), 0xFFFFB936.toInt(),
+                            Shader.TileMode.CLAMP
+                        )
+                        canvas.drawPath(folder, fill)
+                        fill.shader = null
+                        fill.color = 0x55FFFFFF
+                        canvas.drawRoundRect(25f, 43f, 74f, 47f, 2f, 2f, fill)
                     }
                     "contacts" -> {
-                        canvas.drawCircle(50f, 38f, 13f, fill)
-                        canvas.drawArc(22f, 49f, 78f, 91f, 180f, 180f, true, fill)
+                        fill.color = 0xFFFFFFFF.toInt()
+                        canvas.drawCircle(50f, 39f, 13f, fill)
+                        canvas.drawRoundRect(25f, 55f, 75f, 84f, 22f, 22f, fill)
+                        fill.color = 0x40FFFFFF
+                        canvas.drawCircle(50f, 39f, 17f, fill)
                     }
                     "calculator" -> {
-                        canvas.drawRoundRect(25f, 17f, 75f, 83f, 8f, 8f, line)
-                        canvas.drawRoundRect(33f, 25f, 67f, 39f, 3f, 3f, fill)
-                        for (y in listOf(50f, 64f, 76f)) {
+                        fill.color = 0xFF29364A.toInt()
+                        canvas.drawRoundRect(24f, 16f, 76f, 84f, 10f, 10f, fill)
+                        fill.color = 0xFFB9D9F5.toInt()
+                        canvas.drawRoundRect(31f, 24f, 69f, 40f, 4f, 4f, fill)
+                        fill.color = Color.WHITE
+                        for (y in listOf(51f, 65f, 77f)) {
                             for (x in listOf(37f, 50f, 63f)) {
-                                canvas.drawCircle(x, y, 3f, fill)
+                                canvas.drawCircle(x, y, 4f, fill)
                             }
                         }
+                        fill.color = 0xFFFFA943.toInt()
+                        canvas.drawCircle(63f, 51f, 4f, fill)
+                        canvas.drawCircle(63f, 65f, 4f, fill)
+                        canvas.drawCircle(63f, 77f, 4f, fill)
                     }
                     "play" -> {
                         canvas.drawPath(Path().apply {
