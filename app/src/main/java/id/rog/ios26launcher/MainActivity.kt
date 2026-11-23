@@ -168,7 +168,8 @@ class MainActivity : Activity() {
 
         val scroll = ScrollView(this).apply {
             isFillViewport = false
-            clipToPadding = false
+            clipToPadding = true
+            setPadding(0, dp(10), 0, 0)
             overScrollMode = View.OVER_SCROLL_NEVER
         }
 
@@ -297,6 +298,9 @@ class MainActivity : Activity() {
         )
 
         setContentView(root)
+        root.isFocusableInTouchMode = true
+        root.requestFocus()
+        scroll.post { scroll.scrollTo(0, 0) }
         updateClock()
     }
 
