@@ -428,15 +428,22 @@ class MainActivity : Activity() {
                         canvas.drawCircle(70f, 41f, 3f, fill)
                     }
                     "settings" -> {
-                        for (i in 0 until 8) {
-                            canvas.save()
-                            canvas.rotate(i * 45f, 50f, 50f)
-                            canvas.drawRoundRect(45f, 17f, 55f, 37f, 4f, 4f, fill)
-                            canvas.restore()
+                        val gear = Path().apply {
+                            for (i in 0 until 32) {
+                                val angle = Math.toRadians(i * 11.25 - 90.0)
+                                val radius = when (i % 4) {
+                                    1, 2 -> 34f
+                                    else -> 27f
+                                }
+                                val x = 50f + radius * kotlin.math.cos(angle).toFloat()
+                                val y = 50f + radius * kotlin.math.sin(angle).toFloat()
+                                if (i == 0) moveTo(x, y) else lineTo(x, y)
+                            }
+                            close()
                         }
-                        canvas.drawCircle(50f, 50f, 25f, fill)
+                        canvas.drawPath(gear, fill)
                         fill.color = colors[1]
-                        canvas.drawCircle(50f, 50f, 12f, fill)
+                        canvas.drawCircle(50f, 50f, 13f, fill)
                         fill.color = Color.WHITE
                     }
                     "photos" -> {
