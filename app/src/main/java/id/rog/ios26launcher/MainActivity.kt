@@ -197,7 +197,7 @@ class MainActivity : Activity() {
 
         scroll.addView(
             grid,
-            ScrollView.LayoutParams(-1, -2)
+            android.view.ViewGroup.LayoutParams(-1, -2)
         )
         root.addView(
             scroll,
