@@ -139,7 +139,7 @@ class MainActivity : Activity() {
             setHintTextColor(Color.argb(190, 255, 255, 255))
             setTextColor(Color.WHITE)
             textSize = 15f
-            singleLine = true
+            setSingleLine(true)
             setPadding(dp(18), dp(5), dp(18), dp(5))
             background = glass()
         }
