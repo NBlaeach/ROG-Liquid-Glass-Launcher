@@ -211,6 +211,9 @@ class MainActivity : Activity() {
                 line.alpha = 235
                 line.strokeWidth = 7f
 
+                // Kedalaman lembut khusus untuk logo vektor
+                fill.setShadowLayer(1.8f, 0f, 1.2f, 0x66000000)
+
                 when (kind) {
                     "binance" -> {
                         fill.color = Color.rgb(245, 190, 55)
@@ -763,6 +766,9 @@ class MainActivity : Activity() {
                     }
                 }
 
+                // Bersihkan bayangan sebelum menggambar permukaan kaca
+                fill.clearShadowLayer()
+
                 // Liquid Glass overlay untuk semua ikon
                 val glassSave = canvas.save()
                 canvas.clipPath(tilePath)
@@ -813,6 +819,24 @@ class MainActivity : Activity() {
                 line.alpha = 145
                 line.strokeWidth = 2f
                 canvas.drawPath(tilePath, line)
+
+                // Kilau spekular tipis pada tepi atas kaca
+                val topSheen = Path().apply {
+                    moveTo(15f, 12f)
+                    cubicTo(29f, 5f, 48f, 6f, 63f, 14f)
+                }
+                line.color = Color.WHITE
+                line.alpha = 82
+                line.strokeWidth = 1.15f
+                line.strokeCap = Paint.Cap.ROUND
+                canvas.drawPath(topSheen, line)
+
+                // Pantulan kecil agar permukaan terasa lebih seperti kaca
+                fill.color = 0x16FFFFFF
+                canvas.drawRoundRect(
+                    RectF(19f, 9f, 39f, 10.5f),
+                    1f, 1f, fill
+                )
 
                 canvas.restoreToCount(glassSave)
                 canvas.restoreToCount(save)
