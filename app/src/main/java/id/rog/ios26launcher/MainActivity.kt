@@ -26,6 +26,7 @@ class MainActivity : Activity() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var clock: TextView
     private lateinit var date: TextView
+    private var knownPackages: Set<String>? = null
 
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
@@ -876,6 +877,14 @@ class MainActivity : Activity() {
         super.onResume()
         handler.removeCallbacks(clockTick)
         handler.post(clockTick)
+
+        val currentPackages = loadApps().map {
+            it.activityInfo.packageName
+        }.toSet()
+
+        if (knownPackages != null && currentPackages != knownPackages) {
+            renderHome()
+        }
     }
 
     override fun onPause() {
@@ -998,6 +1007,9 @@ class MainActivity : Activity() {
         )
 
         val apps = loadApps()
+        knownPackages = apps.map {
+            it.activityInfo.packageName
+        }.toSet()
         val pageGrids = mutableListOf<GridLayout>()
         val appPages = apps.chunked(16).ifEmpty {
             listOf(emptyList<ResolveInfo>())
