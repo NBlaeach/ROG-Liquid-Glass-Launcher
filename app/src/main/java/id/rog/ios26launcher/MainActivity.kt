@@ -887,7 +887,7 @@ class MainActivity : Activity() {
                                 inAnimation = android.view.animation.TranslateAnimation(
                                     android.view.animation.Animation.RELATIVE_TO_SELF, 1f,
                                     android.view.animation.Animation.RELATIVE_TO_SELF, 0f,
-                                    0f, 0f, 0f, 0f
+                                    0, 0f, 0, 0f
                                 ).apply {
                                     duration = 240
                                     interpolator = android.view.animation.DecelerateInterpolator(1.5f)
@@ -895,7 +895,7 @@ class MainActivity : Activity() {
                                 outAnimation = android.view.animation.TranslateAnimation(
                                     android.view.animation.Animation.RELATIVE_TO_SELF, 0f,
                                     android.view.animation.Animation.RELATIVE_TO_SELF, -1f,
-                                    0f, 0f, 0f, 0f
+                                    0, 0f, 0, 0f
                                 ).apply {
                                     duration = 240
                                     interpolator = android.view.animation.DecelerateInterpolator(1.5f)
@@ -905,7 +905,7 @@ class MainActivity : Activity() {
                                 inAnimation = android.view.animation.TranslateAnimation(
                                     android.view.animation.Animation.RELATIVE_TO_SELF, -1f,
                                     android.view.animation.Animation.RELATIVE_TO_SELF, 0f,
-                                    0f, 0f, 0f, 0f
+                                    0, 0f, 0, 0f
                                 ).apply {
                                     duration = 240
                                     interpolator = android.view.animation.DecelerateInterpolator(1.5f)
@@ -913,7 +913,7 @@ class MainActivity : Activity() {
                                 outAnimation = android.view.animation.TranslateAnimation(
                                     android.view.animation.Animation.RELATIVE_TO_SELF, 0f,
                                     android.view.animation.Animation.RELATIVE_TO_SELF, 1f,
-                                    0f, 0f, 0f, 0f
+                                    0, 0f, 0, 0f
                                 ).apply {
                                     duration = 240
                                     interpolator = android.view.animation.DecelerateInterpolator(1.5f)
