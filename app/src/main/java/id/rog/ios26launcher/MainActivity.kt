@@ -149,6 +149,21 @@ class MainActivity : Activity() {
 
             override fun onDraw(canvas: Canvas) {
                 super.onDraw(canvas)
+
+                // Reset Paint agar gaya satu ikon tidak bocor ke ikon berikutnya
+                fill.shader = null
+                fill.alpha = 255
+                fill.style = Paint.Style.FILL
+                fill.color = Color.WHITE
+
+                line.shader = null
+                line.alpha = 255
+                line.style = Paint.Style.STROKE
+                line.color = Color.WHITE
+                line.strokeWidth = 7f
+                line.strokeCap = Paint.Cap.ROUND
+                line.strokeJoin = Paint.Join.ROUND
+
                 val side = minOf(width, height).toFloat()
                 if (side <= 0f) return
 
@@ -716,25 +731,26 @@ class MainActivity : Activity() {
                     }
                     else -> {
                         val appDrawable = app.loadIcon(packageManager)
-                        val iconRect = RectF(3f, 3f, 97f, 97f)
+
+                        // Logo asli dipusatkan agar latar Liquid Glass tetap terlihat
                         val iconSave = canvas.save()
                         canvas.clipPath(tilePath)
-                        appDrawable.setBounds(3, 3, 97, 97)
+                        appDrawable.setBounds(11, 11, 89, 89)
                         appDrawable.draw(canvas)
                         canvas.restoreToCount(iconSave)
 
-                        // Highlight lembut untuk ikon asli Android
+                        // Highlight lembut pada permukaan kaca universal
                         fill.color = Color.WHITE
                         fill.shader = LinearGradient(
                             0f, 5f, 0f, 65f,
-                            intArrayOf(0x38FFFFFF, 0x08FFFFFF, 0x00FFFFFF),
+                            intArrayOf(0x24FFFFFF, 0x08FFFFFF, 0x00FFFFFF),
                             null, Shader.TileMode.CLAMP
                         )
                         canvas.drawPath(tilePath, fill)
                         fill.shader = null
 
                         line.color = Color.WHITE
-                        line.alpha = 115
+                        line.alpha = 95
                         line.strokeWidth = 1.5f
                         canvas.drawPath(tilePath, line)
                         line.alpha = 235
