@@ -221,44 +221,92 @@ class MainActivity : Activity() {
                     }
 
                     "shopee" -> {
-                        fill.color = Color.WHITE
-                        canvas.drawRoundRect(27f, 39f, 73f, 78f, 8f, 8f, fill)
-                        line.color = colors[1]
-                        canvas.drawArc(35f, 19f, 65f, 53f, 180f, 180f, false, line)
-                        fill.color = colors[1]
-                        canvas.drawText("S", 39f, 66f, Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                            color = colors[1]; textSize = 27f; isFakeBoldText = true
-                        })
+                        val logoFill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = Color.WHITE
+                            style = Paint.Style.FILL
+                        }
+                        val logoLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = colors[1]
+                            style = Paint.Style.STROKE
+                            strokeWidth = 4f
+                            strokeCap = Paint.Cap.ROUND
+                            strokeJoin = Paint.Join.ROUND
+                        }
+                        canvas.drawRoundRect(25f, 39f, 75f, 80f, 10f, 10f, logoFill)
+                        canvas.drawArc(35f, 19f, 65f, 53f, 180f, 180f, false, logoLine)
+                        val letter = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = colors[1]
+                            textSize = 29f
+                            textAlign = Paint.Align.CENTER
+                            isFakeBoldText = true
+                        }
+                        canvas.drawText("S", 50f, 68f, letter)
                     }
                     "tokopedia" -> {
-                        fill.color = Color.WHITE
-                        canvas.drawRoundRect(25f, 34f, 75f, 77f, 10f, 10f, fill)
-                        line.color = colors[1]
-                        canvas.drawArc(35f, 17f, 65f, 52f, 180f, 180f, false, line)
-                        fill.color = colors[1]
-                        canvas.drawCircle(41f, 52f, 4f, fill)
-                        canvas.drawCircle(59f, 52f, 4f, fill)
-                        canvas.drawArc(39f, 52f, 61f, 69f, 10f, 160f, false, line)
+                        val logoFill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = Color.WHITE
+                            style = Paint.Style.FILL
+                        }
+                        val logoLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = colors[1]
+                            style = Paint.Style.STROKE
+                            strokeWidth = 4f
+                            strokeCap = Paint.Cap.ROUND
+                            strokeJoin = Paint.Join.ROUND
+                        }
+                        canvas.drawRoundRect(25f, 34f, 75f, 78f, 11f, 11f, logoFill)
+                        canvas.drawArc(35f, 17f, 65f, 52f, 180f, 180f, false, logoLine)
+                        val logoFillGreen = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = colors[1]
+                        }
+                        canvas.drawCircle(41f, 52f, 4f, logoFillGreen)
+                        canvas.drawCircle(59f, 52f, 4f, logoFillGreen)
+                        canvas.drawArc(39f, 52f, 61f, 69f, 10f, 160f, false, logoLine)
                     }
                     "termux" -> {
-                        line.color = Color.rgb(100, 235, 145)
-                        val prompt = Path().apply {
-                            moveTo(27f, 35f); lineTo(48f, 50f); lineTo(27f, 65f)
+                        val logoLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = Color.rgb(115, 255, 165)
+                            style = Paint.Style.STROKE
+                            strokeWidth = 6f
+                            strokeCap = Paint.Cap.ROUND
+                            strokeJoin = Paint.Join.ROUND
                         }
-                        canvas.drawPath(prompt, line)
-                        canvas.drawLine(53f, 65f, 76f, 65f, line)
+                        val prompt = Path().apply {
+                            moveTo(27f, 34f)
+                            lineTo(49f, 50f)
+                            lineTo(27f, 66f)
+                        }
+                        canvas.drawPath(prompt, logoLine)
+                        canvas.drawLine(53f, 66f, 76f, 66f, logoLine)
                     }
                     "magisk" -> {
-                        fill.color = Color.WHITE
-                        canvas.drawPath(Path().apply {
-                            moveTo(50f, 20f); lineTo(77f, 34f)
-                            lineTo(72f, 62f); lineTo(50f, 82f)
-                            lineTo(28f, 62f); lineTo(23f, 34f); close()
-                        }, fill)
-                        fill.color = colors[1]
-                        canvas.drawCircle(40f, 48f, 4f, fill)
-                        canvas.drawCircle(60f, 48f, 4f, fill)
-                        canvas.drawLine(40f, 62f, 60f, 62f, line)
+                        val logoFill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = Color.WHITE
+                            style = Paint.Style.FILL
+                        }
+                        val logoLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = colors[1]
+                            style = Paint.Style.STROKE
+                            strokeWidth = 4f
+                            strokeCap = Paint.Cap.ROUND
+                            strokeJoin = Paint.Join.ROUND
+                        }
+                        val shield = Path().apply {
+                            moveTo(50f, 19f)
+                            lineTo(77f, 32f)
+                            lineTo(73f, 60f)
+                            cubicTo(69f, 72f, 58f, 80f, 50f, 84f)
+                            cubicTo(42f, 80f, 31f, 72f, 27f, 60f)
+                            lineTo(23f, 32f)
+                            close()
+                        }
+                        canvas.drawPath(shield, logoFill)
+                        val face = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = colors[1]
+                        }
+                        canvas.drawCircle(40f, 47f, 4f, face)
+                        canvas.drawCircle(60f, 47f, 4f, face)
+                        canvas.drawArc(39f, 49f, 61f, 68f, 10f, 160f, false, logoLine)
                     }
                     "root" -> {
                         fill.color = Color.rgb(255, 194, 75)
@@ -351,29 +399,48 @@ class MainActivity : Activity() {
                             moveTo(57f, 25f)
                             cubicTo(60f, 38f, 67f, 43f, 77f, 44f)
                         }
-                        line.color = Color.rgb(0, 230, 255)
+                        val logoLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            style = Paint.Style.STROKE
+                            strokeWidth = 7f
+                            strokeCap = Paint.Cap.ROUND
+                            strokeJoin = Paint.Join.ROUND
+                        }
+                        logoLine.color = Color.rgb(0, 230, 255)
                         canvas.save()
                         canvas.translate(-3f, 1f)
-                        canvas.drawPath(note, line)
+                        canvas.drawPath(note, logoLine)
                         canvas.restore()
-                        line.color = Color.rgb(255, 55, 90)
+                        logoLine.color = Color.rgb(255, 55, 90)
                         canvas.save()
                         canvas.translate(3f, -1f)
-                        canvas.drawPath(note, line)
+                        canvas.drawPath(note, logoLine)
                         canvas.restore()
-                        line.color = Color.WHITE
-                        canvas.drawPath(note, line)
-                        fill.color = Color.WHITE
-                        canvas.drawCircle(43f, 67f, 8f, fill)
+                        logoLine.color = Color.WHITE
+                        canvas.drawPath(note, logoLine)
+                        val noteHead = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = Color.WHITE
+                        }
+                        canvas.drawCircle(43f, 67f, 7f, noteHead)
                     }
                     "whatsapp" -> {
-                        canvas.drawCircle(50f, 48f, 29f, fill)
-                        canvas.drawPath(Path().apply {
-                            moveTo(29f, 70f)
-                            lineTo(25f, 83f)
-                            lineTo(41f, 77f)
+                        val logoLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = Color.WHITE
+                            style = Paint.Style.STROKE
+                            strokeWidth = 5f
+                            strokeCap = Paint.Cap.ROUND
+                            strokeJoin = Paint.Join.ROUND
+                        }
+                        val bubble = Path().apply {
+                            moveTo(50f, 19f)
+                            cubicTo(32f, 19f, 20f, 32f, 20f, 49f)
+                            cubicTo(20f, 57f, 23f, 64f, 28f, 70f)
+                            lineTo(24f, 82f)
+                            lineTo(39f, 77f)
+                            cubicTo(56f, 82f, 80f, 68f, 80f, 49f)
+                            cubicTo(80f, 32f, 67f, 19f, 50f, 19f)
                             close()
-                        }, fill)
+                        }
+                        canvas.drawPath(bubble, logoLine)
                         val phone = Path().apply {
                             moveTo(38f, 33f)
                             cubicTo(33f, 37f, 42f, 57f, 57f, 62f)
@@ -384,7 +451,8 @@ class MainActivity : Activity() {
                             lineTo(47f, 37f)
                             close()
                         }
-                        canvas.drawPath(phone, line)
+                        logoLine.strokeWidth = 6f
+                        canvas.drawPath(phone, logoLine)
                     }
                     "phone" -> {
                         val handset = Path().apply {
