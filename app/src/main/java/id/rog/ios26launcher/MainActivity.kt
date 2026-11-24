@@ -885,19 +885,39 @@ class MainActivity : Activity() {
                         if (kotlin.math.abs(dx) > swipeDistance && childCount > 1) {
                             if (dx < 0 && displayedChild < childCount - 1) {
                                 inAnimation = android.view.animation.TranslateAnimation(
-                                    1f, 0f, 0f, 0f
-                                ).apply { duration = 220 }
+                                    android.view.animation.Animation.RELATIVE_TO_SELF, 1f,
+                                    android.view.animation.Animation.RELATIVE_TO_SELF, 0f,
+                                    0f, 0f, 0f, 0f
+                                ).apply {
+                                    duration = 240
+                                    interpolator = android.view.animation.DecelerateInterpolator(1.5f)
+                                }
                                 outAnimation = android.view.animation.TranslateAnimation(
-                                    0f, -1f, 0f, 0f
-                                ).apply { duration = 220 }
+                                    android.view.animation.Animation.RELATIVE_TO_SELF, 0f,
+                                    android.view.animation.Animation.RELATIVE_TO_SELF, -1f,
+                                    0f, 0f, 0f, 0f
+                                ).apply {
+                                    duration = 240
+                                    interpolator = android.view.animation.DecelerateInterpolator(1.5f)
+                                }
                                 showNext()
                             } else if (dx > 0 && displayedChild > 0) {
                                 inAnimation = android.view.animation.TranslateAnimation(
-                                    -1f, 0f, 0f, 0f
-                                ).apply { duration = 220 }
+                                    android.view.animation.Animation.RELATIVE_TO_SELF, -1f,
+                                    android.view.animation.Animation.RELATIVE_TO_SELF, 0f,
+                                    0f, 0f, 0f, 0f
+                                ).apply {
+                                    duration = 240
+                                    interpolator = android.view.animation.DecelerateInterpolator(1.5f)
+                                }
                                 outAnimation = android.view.animation.TranslateAnimation(
-                                    0f, 1f, 0f, 0f
-                                ).apply { duration = 220 }
+                                    android.view.animation.Animation.RELATIVE_TO_SELF, 0f,
+                                    android.view.animation.Animation.RELATIVE_TO_SELF, 1f,
+                                    0f, 0f, 0f, 0f
+                                ).apply {
+                                    duration = 240
+                                    interpolator = android.view.animation.DecelerateInterpolator(1.5f)
+                                }
                                 showPrevious()
                             }
                             pageDots.text = (0 until childCount).joinToString("  ") {
@@ -913,6 +933,7 @@ class MainActivity : Activity() {
             setPadding(0, dp(4), 0, dp(4))
             clipChildren = false
             clipToPadding = false
+            setLayerType(View.LAYER_TYPE_HARDWARE, null)
         }
 
         appPages.forEach { pageApps ->
