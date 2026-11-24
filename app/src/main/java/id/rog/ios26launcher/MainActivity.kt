@@ -12,6 +12,7 @@ import android.graphics.Paint
 import android.graphics.Canvas
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -174,11 +175,14 @@ class MainActivity : Activity() {
 
                 val tile = RectF(3f, 3f, 97f, 97f)
                 val tilePath = Path().apply {
-                    moveTo(50f, 3f)
-                    cubicTo(72f, 3f, 97f, 28f, 97f, 50f)
-                    cubicTo(97f, 72f, 72f, 97f, 50f, 97f)
-                    cubicTo(28f, 97f, 3f, 72f, 3f, 50f)
-                    cubicTo(3f, 28f, 28f, 3f, 50f, 3f)
+                    moveTo(34f, 3f)
+                    cubicTo(18f, 3f, 3f, 18f, 3f, 34f)
+                    lineTo(3f, 66f)
+                    cubicTo(3f, 82f, 18f, 97f, 34f, 97f)
+                    lineTo(66f, 97f)
+                    cubicTo(82f, 97f, 97f, 82f, 97f, 66f)
+                    lineTo(97f, 34f)
+                    cubicTo(97f, 18f, 82f, 3f, 66f, 3f)
                     close()
                 }
                 // Bayangan tipis untuk memberi kedalaman pada ikon
@@ -741,11 +745,18 @@ class MainActivity : Activity() {
                     else -> {
                         val appDrawable = app.loadIcon(packageManager)
 
-                        // Logo asli dipusatkan agar latar Liquid Glass tetap terlihat
+                        // Gambar foreground ikon adaptif saja agar latar squircle tetap terlihat.
                         val iconSave = canvas.save()
                         canvas.clipPath(tilePath)
-                        appDrawable.setBounds(11, 11, 89, 89)
-                        appDrawable.draw(canvas)
+                        if (appDrawable is AdaptiveIconDrawable) {
+                            appDrawable.foreground?.let { foreground ->
+                                foreground.setBounds(14, 14, 86, 86)
+                                foreground.draw(canvas)
+                            }
+                        } else {
+                            appDrawable.setBounds(14, 14, 86, 86)
+                            appDrawable.draw(canvas)
+                        }
                         canvas.restoreToCount(iconSave)
 
                         // Highlight lembut pada permukaan kaca universal
