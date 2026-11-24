@@ -466,8 +466,11 @@ class MainActivity : Activity() {
                             lineTo(47f, 37f)
                             close()
                         }
-                        logoLine.strokeWidth = 6f
-                        canvas.drawPath(phone, logoLine)
+                        val phoneFill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            color = Color.WHITE
+                            style = Paint.Style.FILL
+                        }
+                        canvas.drawPath(phone, phoneFill)
                     }
                     "phone" -> {
                         val handset = Path().apply {
@@ -560,11 +563,11 @@ class MainActivity : Activity() {
                                                 0xFFFFA33D.toInt(), 0xFF70C86B.toInt()
                                             )
                                             for (i in 0 until 6) {
-                                                val angle = Math.toRadians(i * 60.0 - 90.0)
                                                 fill.color = petalColors[i]
-                                                val x = 50f + 16f * kotlin.math.cos(angle).toFloat()
-                                                val y = 50f + 16f * kotlin.math.sin(angle).toFloat()
-                                                canvas.drawCircle(x, y, 12f, fill)
+                                                canvas.save()
+                                                canvas.rotate(i * 60f, 50f, 50f)
+                                                canvas.drawOval(42f, 17f, 58f, 51f, fill)
+                                                canvas.restore()
                                             }
                                             fill.color = Color.WHITE
                                             canvas.drawCircle(50f, 50f, 6f, fill)
@@ -615,11 +618,13 @@ class MainActivity : Activity() {
                                             fill.color = Color.WHITE
                                             canvas.drawLine(36f, 18f, 36f, 31f, line)
                                             canvas.drawLine(64f, 18f, 64f, 31f, line)
-                                            for (i in 0 until 3) {
-                                                canvas.drawCircle(37f + i * 13f, 54f, 3f, fill)
-                                            }
-                                            for (i in 0 until 3) {
-                                                canvas.drawCircle(37f + i * 13f, 67f, 3f, fill)
+                                            for (y in listOf(54f, 67f)) {
+                                                for (x in listOf(37f, 50f, 63f)) {
+                                                    canvas.drawRoundRect(
+                                                        x - 3f, y - 3f, x + 3f, y + 3f,
+                                                        1.5f, 1.5f, fill
+                                                    )
+                                                }
                                             }
                                         }
                     "music" -> {
