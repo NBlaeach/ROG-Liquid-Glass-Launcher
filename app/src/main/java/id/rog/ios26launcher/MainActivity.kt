@@ -933,8 +933,45 @@ class MainActivity : Activity() {
             isAllCaps = false
             setOnClickListener { showControlCenter() }
         }
-        root.addView(
+        val quickActions = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+        }
+
+        quickActions.addView(
             controlButton,
+            LinearLayout.LayoutParams(0, dp(48), 1f).apply {
+                rightMargin = dp(5)
+            }
+        )
+
+        val wallpaperButton = Button(this).apply {
+            text = "▧  WALLPAPER"
+            setTextColor(Color.WHITE)
+            background = glass()
+            isAllCaps = false
+            setOnClickListener {
+                try {
+                    startActivity(Intent(Intent.ACTION_SET_WALLPAPER))
+                } catch (_: Exception) {
+                    android.widget.Toast.makeText(
+                        this@MainActivity,
+                        "Pemilih wallpaper tidak tersedia",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
+        quickActions.addView(
+            wallpaperButton,
+            LinearLayout.LayoutParams(0, dp(48), 1f).apply {
+                leftMargin = dp(5)
+            }
+        )
+
+        root.addView(
+            quickActions,
             LinearLayout.LayoutParams(-1, dp(48)).apply {
                 bottomMargin = dp(10)
             }
@@ -1104,13 +1141,34 @@ class MainActivity : Activity() {
                 text: CharSequence?, start: Int, before: Int, count: Int
             ) {
                 val query = text?.toString()?.trim()?.lowercase().orEmpty()
+
                 pageGrids.forEach { grid ->
                     for (i in 0 until grid.childCount) {
                         val cell = grid.getChildAt(i)
                         cell.visibility =
-                            if (cell.tag.toString().contains(query)) View.VISIBLE
-                            else View.GONE
+                            if (query.isEmpty() || cell.tag.toString().contains(query))
+                                View.VISIBLE
+                            else
+                                View.GONE
                     }
+                }
+
+                val matchingPage = if (query.isEmpty()) {
+                    0
+                } else {
+                    appPages.indexOfFirst { pageApps ->
+                        pageApps.any { app ->
+                            app.loadLabel(packageManager)
+                                .toString()
+                                .lowercase()
+                                .contains(query)
+                        }
+                    }
+                }
+
+                pages.displayedChild = matchingPage.coerceAtLeast(0)
+                pageDots.text = (0 until pages.childCount).joinToString("  ") {
+                    if (it == pages.displayedChild) "●" else "○"
                 }
             }
 
