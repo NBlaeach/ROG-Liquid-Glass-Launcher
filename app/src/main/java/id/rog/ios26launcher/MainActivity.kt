@@ -838,60 +838,137 @@ class MainActivity : Activity() {
         )
 
         val apps = loadApps()
-
-        val scroll = ScrollView(this).apply {
-            isFillViewport = false
-            clipToPadding = true
-            isVerticalScrollBarEnabled = false
-            setPadding(0, dp(10), 0, dp(90))
-            overScrollMode = View.OVER_SCROLL_NEVER
+        val pageGrids = mutableListOf<GridLayout>()
+        val appPages = apps.chunked(16).ifEmpty {
+            listOf(emptyList<ResolveInfo>())
         }
 
-        val grid = GridLayout(this).apply {
-            columnCount = 4
-            useDefaultMargins = false
-            alignmentMode = GridLayout.ALIGN_BOUNDS
+        val pageDots = TextView(this).apply {
+            setTextColor(Color.WHITE)
+            textSize = 17f
+            gravity = Gravity.CENTER
+            setPadding(0, dp(3), 0, dp(5))
         }
 
-        apps.forEach { app ->
-            val cell = LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                gravity = Gravity.CENTER
-                setPadding(dp(3), dp(4), dp(3), dp(5))
-                isClickable = true
-                isFocusable = true
-                setOnClickListener { launch(app) }
-            }
+        val pages = object : ViewFlipper(this) {
+            private var downX = 0f
+            private var downY = 0f
+            private val swipeDistance = dp(45)
 
-            cell.tag = app.loadLabel(packageManager).toString().lowercase()
-            cell.addView(
-                liquidIcon(app),
-                LinearLayout.LayoutParams(dp(58), dp(58))
-            )
-
-            val label = TextView(this).apply {
-                text = app.loadLabel(packageManager).toString()
-                setTextColor(Color.WHITE)
-                textSize = 10.5f
-                gravity = Gravity.CENTER
-                maxLines = 1
-                ellipsize = android.text.TextUtils.TruncateAt.END
-            }
-            cell.addView(
-                label,
-                LinearLayout.LayoutParams(-1, dp(24))
-            )
-
-            grid.addView(
-                cell,
-                GridLayout.LayoutParams().apply {
-                    width = 0
-                    height = GridLayout.LayoutParams.WRAP_CONTENT
-                    columnSpec = GridLayout.spec(
-                        GridLayout.UNDEFINED, 1f
-                    )
+            override fun onInterceptTouchEvent(event: android.view.MotionEvent): Boolean {
+                when (event.actionMasked) {
+                    android.view.MotionEvent.ACTION_DOWN -> {
+                        downX = event.x
+                        downY = event.y
+                    }
+                    android.view.MotionEvent.ACTION_MOVE -> {
+                        val dx = event.x - downX
+                        val dy = event.y - downY
+                        if (kotlin.math.abs(dx) > swipeDistance &&
+                            kotlin.math.abs(dx) > kotlin.math.abs(dy) * 1.2f &&
+                            childCount > 1
+                        ) return true
+                    }
                 }
+                return super.onInterceptTouchEvent(event)
+            }
+
+            override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+                when (event.actionMasked) {
+                    android.view.MotionEvent.ACTION_DOWN -> {
+                        downX = event.x
+                        downY = event.y
+                        return true
+                    }
+                    android.view.MotionEvent.ACTION_UP -> {
+                        val dx = event.x - downX
+                        if (kotlin.math.abs(dx) > swipeDistance && childCount > 1) {
+                            if (dx < 0 && displayedChild < childCount - 1) {
+                                inAnimation = android.view.animation.TranslateAnimation(
+                                    1f, 0f, 0f, 0f
+                                ).apply { duration = 220 }
+                                outAnimation = android.view.animation.TranslateAnimation(
+                                    0f, -1f, 0f, 0f
+                                ).apply { duration = 220 }
+                                showNext()
+                            } else if (dx > 0 && displayedChild > 0) {
+                                inAnimation = android.view.animation.TranslateAnimation(
+                                    -1f, 0f, 0f, 0f
+                                ).apply { duration = 220 }
+                                outAnimation = android.view.animation.TranslateAnimation(
+                                    0f, 1f, 0f, 0f
+                                ).apply { duration = 220 }
+                                showPrevious()
+                            }
+                            pageDots.text = (0 until childCount).joinToString("  ") {
+                                if (it == displayedChild) "●" else "○"
+                            }
+                        }
+                        return true
+                    }
+                }
+                return true
+            }
+        }.apply {
+            setPadding(0, dp(4), 0, dp(4))
+            clipChildren = false
+            clipToPadding = false
+        }
+
+        appPages.forEach { pageApps ->
+            val grid = GridLayout(this).apply {
+                columnCount = 4
+                useDefaultMargins = false
+                alignmentMode = GridLayout.ALIGN_BOUNDS
+            }
+
+            pageApps.forEach { app ->
+                val cell = LinearLayout(this).apply {
+                    orientation = LinearLayout.VERTICAL
+                    gravity = Gravity.CENTER
+                    setPadding(dp(3), dp(4), dp(3), dp(5))
+                    isClickable = true
+                    isFocusable = true
+                    setOnClickListener { launch(app) }
+                }
+
+                cell.tag = app.loadLabel(packageManager).toString().lowercase()
+
+                cell.addView(
+                    liquidIcon(app),
+                    LinearLayout.LayoutParams(dp(58), dp(58))
+                )
+
+                val label = TextView(this).apply {
+                    text = app.loadLabel(packageManager).toString()
+                    setTextColor(Color.WHITE)
+                    textSize = 10.5f
+                    gravity = Gravity.CENTER
+                    maxLines = 1
+                    ellipsize = android.text.TextUtils.TruncateAt.END
+                }
+
+                cell.addView(label, LinearLayout.LayoutParams(-1, dp(24)))
+
+                grid.addView(
+                    cell,
+                    GridLayout.LayoutParams().apply {
+                        width = 0
+                        height = GridLayout.LayoutParams.WRAP_CONTENT
+                        columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    }
+                )
+            }
+
+            pageGrids.add(grid)
+            pages.addView(
+                grid,
+                ViewFlipper.LayoutParams(-1, -1)
             )
+        }
+
+        pageDots.text = (0 until pages.childCount).joinToString("  ") {
+            if (it == 0) "●" else "○"
         }
 
         search.addTextChangedListener(object : android.text.TextWatcher {
@@ -903,24 +980,26 @@ class MainActivity : Activity() {
                 text: CharSequence?, start: Int, before: Int, count: Int
             ) {
                 val query = text?.toString()?.trim()?.lowercase().orEmpty()
-                for (i in 0 until grid.childCount) {
-                    val cell = grid.getChildAt(i)
-                    cell.visibility =
-                        if (cell.tag.toString().contains(query)) View.VISIBLE
-                        else View.GONE
+                pageGrids.forEach { grid ->
+                    for (i in 0 until grid.childCount) {
+                        val cell = grid.getChildAt(i)
+                        cell.visibility =
+                            if (cell.tag.toString().contains(query)) View.VISIBLE
+                            else View.GONE
+                    }
                 }
             }
 
             override fun afterTextChanged(text: android.text.Editable?) {}
         })
 
-        scroll.addView(
-            grid,
-            android.view.ViewGroup.LayoutParams(-1, -2)
+        root.addView(
+            pages,
+            LinearLayout.LayoutParams(-1, 0, 1f)
         )
         root.addView(
-            scroll,
-            LinearLayout.LayoutParams(-1, 0, 1f)
+            pageDots,
+            LinearLayout.LayoutParams(-1, dp(25))
         )
 
         val dockApps = chooseDockApps(apps)
