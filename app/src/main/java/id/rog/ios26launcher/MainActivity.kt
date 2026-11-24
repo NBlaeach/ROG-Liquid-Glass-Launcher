@@ -648,31 +648,27 @@ class MainActivity : Activity() {
                     }
                     else -> {
                         val appDrawable = app.loadIcon(packageManager)
-                        val iconRect = RectF(5f, 5f, 95f, 95f)
+                        val iconRect = RectF(3f, 3f, 97f, 97f)
                         val iconSave = canvas.save()
-                        val iconClip = Path().apply {
-                            addRoundRect(
-                                iconRect, 22f, 22f, Path.Direction.CW
-                            )
-                        }
-                        canvas.clipPath(iconClip)
-                        appDrawable.setBounds(5, 5, 95, 95)
+                        canvas.clipPath(tilePath)
+                        appDrawable.setBounds(3, 3, 97, 97)
                         appDrawable.draw(canvas)
                         canvas.restoreToCount(iconSave)
 
+                        // Highlight lembut untuk ikon asli Android
                         fill.color = Color.WHITE
                         fill.shader = LinearGradient(
                             0f, 5f, 0f, 65f,
-                            intArrayOf(0x48FFFFFF, 0x08FFFFFF, 0x00FFFFFF),
+                            intArrayOf(0x38FFFFFF, 0x08FFFFFF, 0x00FFFFFF),
                             null, Shader.TileMode.CLAMP
                         )
-                        canvas.drawRoundRect(iconRect, 22f, 22f, fill)
+                        canvas.drawPath(tilePath, fill)
                         fill.shader = null
 
                         line.color = Color.WHITE
-                        line.alpha = 125
+                        line.alpha = 115
                         line.strokeWidth = 1.5f
-                        canvas.drawRoundRect(iconRect, 22f, 22f, line)
+                        canvas.drawPath(tilePath, line)
                         line.alpha = 235
                         line.strokeWidth = 7f
                     }
@@ -680,36 +676,54 @@ class MainActivity : Activity() {
 
                 // Liquid Glass overlay untuk semua ikon
                 val glassSave = canvas.save()
-                val glassClip = Path().apply {
-                    addRoundRect(tile, 23f, 23f, Path.Direction.CW)
-                }
                 canvas.clipPath(tilePath)
 
+                // Kilau kaca utama
                 fill.color = Color.WHITE
                 fill.shader = LinearGradient(
-                    12f, 8f, 88f, 72f,
-                    intArrayOf(0x25FFFFFF, 0x08FFFFFF, 0x00FFFFFF),
-                    floatArrayOf(0f, 0.48f, 1f),
+                    8f, 4f, 92f, 68f,
+                    intArrayOf(0x30FFFFFF, 0x12FFFFFF, 0x00FFFFFF),
+                    floatArrayOf(0f, 0.42f, 1f),
                     Shader.TileMode.CLAMP
                 )
                 canvas.drawPath(tilePath, fill)
                 fill.shader = null
 
+                // Refleksi diagonal seperti permukaan kaca
+                val reflection = Path().apply {
+                    moveTo(9f, 9f)
+                    cubicTo(27f, 1f, 49f, 5f, 68f, 17f)
+                    lineTo(39f, 47f)
+                    cubicTo(24f, 39f, 14f, 25f, 9f, 9f)
+                    close()
+                }
+                fill.shader = LinearGradient(
+                    10f, 8f, 68f, 48f,
+                    intArrayOf(0x28FFFFFF, 0x12FFFFFF, 0x00FFFFFF),
+                    floatArrayOf(0f, 0.55f, 1f),
+                    Shader.TileMode.CLAMP
+                )
+                canvas.drawPath(reflection, fill)
+                fill.shader = null
+
+                // Pantulan cahaya di bagian bawah
                 fill.shader = LinearGradient(
                     0f, 68f, 0f, 96f,
-                    intArrayOf(0x00FFFFFF, 0x0AFFFFFF),
+                    intArrayOf(0x00FFFFFF, 0x0AFFFFFF, 0x18FFFFFF),
                     null,
                     Shader.TileMode.CLAMP
                 )
                 canvas.drawPath(tilePath, fill)
                 fill.shader = null
 
+                // Garis tepi kaca berlapis
                 line.color = Color.WHITE
-                line.alpha = 115
-                line.strokeWidth = 1.4f
+                line.alpha = 75
+                line.strokeWidth = 1.2f
                 canvas.drawPath(tilePath, line)
-                line.alpha = 235
-                line.strokeWidth = 7f
+                line.alpha = 145
+                line.strokeWidth = 2f
+                canvas.drawPath(tilePath, line)
 
                 canvas.restoreToCount(glassSave)
                 canvas.restoreToCount(save)
