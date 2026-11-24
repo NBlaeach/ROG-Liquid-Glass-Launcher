@@ -970,6 +970,101 @@ class MainActivity : Activity() {
         updateClock()
     }
 
+    private fun controlGlyph(kind: String): View {
+        return object : View(this) {
+            private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.WHITE
+                style = Paint.Style.STROKE
+                strokeWidth = 3.2f
+                strokeCap = Paint.Cap.ROUND
+                strokeJoin = Paint.Join.ROUND
+            }
+
+            override fun onDraw(canvas: Canvas) {
+                super.onDraw(canvas)
+                val save = canvas.save()
+                canvas.scale(width / 48f, height / 48f)
+
+                when (kind) {
+                    "wifi" -> {
+                        canvas.drawArc(RectF(7f, 9f, 41f, 39f), 220f, 100f, false, paint)
+                        canvas.drawArc(RectF(13f, 17f, 35f, 39f), 220f, 100f, false, paint)
+                        canvas.drawArc(RectF(20f, 25f, 28f, 33f), 220f, 100f, false, paint)
+                        canvas.drawCircle(24f, 37f, 2f, paint.apply { style = Paint.Style.FILL })
+                        paint.style = Paint.Style.STROKE
+                    }
+                    "bluetooth" -> {
+                        val path = Path().apply {
+                            moveTo(24f, 5f)
+                            lineTo(35f, 16f)
+                            lineTo(13f, 34f)
+                            moveTo(24f, 5f)
+                            lineTo(24f, 43f)
+                            lineTo(35f, 32f)
+                            lineTo(13f, 14f)
+                        }
+                        canvas.drawPath(path, paint)
+                    }
+                    "airplane" -> {
+                        val path = Path().apply {
+                            moveTo(24f, 4f)
+                            lineTo(28f, 21f)
+                            lineTo(42f, 31f)
+                            lineTo(41f, 35f)
+                            lineTo(27f, 29f)
+                            lineTo(27f, 42f)
+                            lineTo(33f, 46f)
+                            lineTo(32f, 48f)
+                            lineTo(24f, 45f)
+                            lineTo(16f, 48f)
+                            lineTo(15f, 46f)
+                            lineTo(21f, 42f)
+                            lineTo(21f, 29f)
+                            lineTo(7f, 35f)
+                            lineTo(6f, 31f)
+                            lineTo(20f, 21f)
+                            close()
+                        }
+                        canvas.drawPath(path, paint.apply { style = Paint.Style.FILL })
+                        paint.style = Paint.Style.STROKE
+                    }
+                    "display" -> {
+                        canvas.drawRoundRect(RectF(5f, 7f, 43f, 34f), 4f, 4f, paint)
+                        canvas.drawLine(24f, 34f, 24f, 41f, paint)
+                        canvas.drawLine(15f, 42f, 33f, 42f, paint)
+                    }
+                    "sound" -> {
+                        val speaker = Path().apply {
+                            moveTo(7f, 19f)
+                            lineTo(16f, 19f)
+                            lineTo(27f, 10f)
+                            lineTo(27f, 38f)
+                            lineTo(16f, 29f)
+                            lineTo(7f, 29f)
+                            close()
+                        }
+                        canvas.drawPath(speaker, paint)
+                        canvas.drawArc(RectF(22f, 12f, 42f, 36f), -65f, 130f, false, paint)
+                        canvas.drawArc(RectF(24f, 5f, 48f, 43f), -65f, 130f, false, paint)
+                    }
+                    "settings" -> {
+                        for (i in 0 until 8) {
+                            val angle = Math.toRadians(i * 45.0)
+                            val x1 = 24f + kotlin.math.cos(angle).toFloat() * 13f
+                            val y1 = 24f + kotlin.math.sin(angle).toFloat() * 13f
+                            val x2 = 24f + kotlin.math.cos(angle).toFloat() * 19f
+                            val y2 = 24f + kotlin.math.sin(angle).toFloat() * 19f
+                            canvas.drawLine(x1, y1, x2, y2, paint)
+                        }
+                        canvas.drawCircle(24f, 24f, 14f, paint)
+                        canvas.drawCircle(24f, 24f, 5f, paint)
+                    }
+                }
+                canvas.restoreToCount(save)
+            }
+        }
+    }
+
     private fun showControlCenter() {
         val panel = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -994,59 +1089,74 @@ class MainActivity : Activity() {
         }
         panel.addView(subtitle)
 
-        fun makeTile(label: String, action: String): Button {
-            return Button(this).apply {
+        fun makeTile(label: String, action: String, kind: String): LinearLayout {
+            val tile = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER
+                setPadding(dp(5), dp(8), dp(5), dp(7))
+                background = rounded(Color.argb(85, 115, 155, 215), 20f)
+                elevation = dp(4).toFloat()
+                isClickable = true
+                isFocusable = true
+            }
+
+            val iconHolder = FrameLayout(this).apply {
+                background = rounded(Color.argb(125, 155, 195, 250), 24f)
+                elevation = dp(2).toFloat()
+                addView(
+                    controlGlyph(kind),
+                    FrameLayout.LayoutParams(dp(29), dp(29), Gravity.CENTER)
+                )
+            }
+
+            tile.addView(
+                iconHolder,
+                LinearLayout.LayoutParams(dp(48), dp(48)).apply {
+                    bottomMargin = dp(5)
+                }
+            )
+
+            val caption = TextView(this).apply {
                 text = label
                 setTextColor(Color.WHITE)
-                textSize = 13f
-                isAllCaps = false
+                textSize = 11f
                 gravity = Gravity.CENTER
-                minHeight = dp(62)
-                setPadding(dp(5), dp(8), dp(5), dp(8))
-                background = rounded(
-                    Color.argb(100, 115, 155, 215), 20f
-                )
-                elevation = dp(4).toFloat()
-                setOnTouchListener { view, event ->
-                    when (event.actionMasked) {
-                        android.view.MotionEvent.ACTION_DOWN -> {
-                            view.animate()
-                                .scaleX(0.94f)
-                                .scaleY(0.94f)
-                                .alpha(0.86f)
-                                .setDuration(90)
-                                .start()
-                        }
-                        android.view.MotionEvent.ACTION_UP,
-                        android.view.MotionEvent.ACTION_CANCEL -> {
-                            view.animate()
-                                .scaleX(1f)
-                                .scaleY(1f)
-                                .alpha(1f)
-                                .setDuration(180)
-                                .setInterpolator(
-                                    android.view.animation.OvershootInterpolator(1.2f)
-                                )
-                                .start()
-                        }
+                maxLines = 1
+                typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+            }
+            tile.addView(caption)
+
+            tile.setOnTouchListener { view, event ->
+                when (event.actionMasked) {
+                    android.view.MotionEvent.ACTION_DOWN -> {
+                        view.animate().scaleX(0.94f).scaleY(0.94f)
+                            .alpha(0.86f).setDuration(90).start()
                     }
-                    false
+                    android.view.MotionEvent.ACTION_UP,
+                    android.view.MotionEvent.ACTION_CANCEL -> {
+                        view.animate().scaleX(1f).scaleY(1f)
+                            .alpha(1f).setDuration(180)
+                            .setInterpolator(
+                                android.view.animation.OvershootInterpolator(1.2f)
+                            ).start()
+                    }
                 }
-                setOnClickListener {
-                    try {
-                        startActivity(Intent(action))
-                    } catch (_: Exception) {
-                        startActivity(
-                            Intent(android.provider.Settings.ACTION_SETTINGS)
-                        )
-                    }
+                false
+            }
+
+            tile.setOnClickListener {
+                try {
+                    startActivity(Intent(action))
+                } catch (_: Exception) {
+                    startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))
                 }
             }
+            return tile
         }
 
         fun addPair(
-            left: Pair<String, String>,
-            right: Pair<String, String>
+            left: Triple<String, String, String>,
+            right: Triple<String, String, String>
         ) {
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -1054,15 +1164,15 @@ class MainActivity : Activity() {
             }
 
             row.addView(
-                makeTile(left.first, left.second),
-                LinearLayout.LayoutParams(0, dp(66), 1f).apply {
+                makeTile(left.first, left.second, left.third),
+                LinearLayout.LayoutParams(0, dp(92), 1f).apply {
                     setMargins(dp(3), dp(3), dp(5), dp(3))
                 }
             )
 
             row.addView(
-                makeTile(right.first, right.second),
-                LinearLayout.LayoutParams(0, dp(66), 1f).apply {
+                makeTile(right.first, right.second, right.third),
+                LinearLayout.LayoutParams(0, dp(92), 1f).apply {
                     setMargins(dp(5), dp(3), dp(3), dp(3))
                 }
             )
@@ -1071,18 +1181,18 @@ class MainActivity : Activity() {
         }
 
         addPair(
-            "◉  Wi-Fi" to android.provider.Settings.ACTION_WIFI_SETTINGS,
-            "ᛒ  Bluetooth" to android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
+            Triple("Wi-Fi", android.provider.Settings.ACTION_WIFI_SETTINGS, "wifi"),
+            Triple("Bluetooth", android.provider.Settings.ACTION_BLUETOOTH_SETTINGS, "bluetooth")
         )
 
         addPair(
-            "✈  Pesawat" to android.provider.Settings.ACTION_WIRELESS_SETTINGS,
-            "▣  Layar" to android.provider.Settings.ACTION_DISPLAY_SETTINGS
+            Triple("Pesawat", android.provider.Settings.ACTION_WIRELESS_SETTINGS, "airplane"),
+            Triple("Layar", android.provider.Settings.ACTION_DISPLAY_SETTINGS, "display")
         )
 
         addPair(
-            "♫  Suara" to android.provider.Settings.ACTION_SOUND_SETTINGS,
-            "⚙  Pengaturan" to android.provider.Settings.ACTION_SETTINGS
+            Triple("Suara", android.provider.Settings.ACTION_SOUND_SETTINGS, "sound"),
+            Triple("Pengaturan", android.provider.Settings.ACTION_SETTINGS, "settings")
         )
 
         fun addSectionLabel(text: String) {
