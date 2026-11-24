@@ -963,7 +963,7 @@ class MainActivity : Activity() {
             pageGrids.add(grid)
             pages.addView(
                 grid,
-                ViewFlipper.LayoutParams(-1, -1)
+                FrameLayout.LayoutParams(-1, -1)
             )
         }
 
@@ -1045,7 +1045,6 @@ class MainActivity : Activity() {
         setContentView(root)
         root.isFocusableInTouchMode = true
         root.requestFocus()
-        scroll.post { scroll.scrollTo(0, 0) }
         updateClock()
     }
 
