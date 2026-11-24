@@ -5,6 +5,7 @@
             <category android:name="android.intent.category.LAUNCHER"/>
         </intent>
     </queries>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <application
         android:theme="@style/LauncherTheme"
         android:label="ROG Liquid Glass Launcher"

@@ -1352,7 +1352,17 @@ class MainActivity : Activity() {
         val panel = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(18), dp(18), dp(18), dp(14))
-            background = glass()
+            background = GradientDrawable(
+                GradientDrawable.Orientation.TL_BR,
+                intArrayOf(
+                    Color.argb(225, 30, 58, 100),
+                    Color.argb(195, 65, 105, 165),
+                    Color.argb(220, 22, 40, 76)
+                )
+            ).apply {
+                cornerRadius = dp(30).toFloat()
+                setStroke(dp(1), Color.argb(175, 225, 242, 255))
+            }
         }
 
         val heading = TextView(this).apply {
@@ -1377,14 +1387,34 @@ class MainActivity : Activity() {
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
                 setPadding(dp(5), dp(8), dp(5), dp(7))
-                background = rounded(Color.argb(85, 115, 155, 215), 20f)
+                background = GradientDrawable(
+                    GradientDrawable.Orientation.TL_BR,
+                    intArrayOf(
+                        Color.argb(115, 190, 220, 255),
+                        Color.argb(65, 115, 165, 235),
+                        Color.argb(95, 65, 105, 175)
+                    )
+                ).apply {
+                    cornerRadius = dp(20).toFloat()
+                    setStroke(dp(1), Color.argb(155, 235, 247, 255))
+                }
                 elevation = dp(4).toFloat()
                 isClickable = true
                 isFocusable = true
             }
 
             val iconHolder = FrameLayout(this).apply {
-                background = rounded(Color.argb(125, 155, 195, 250), 24f)
+                background = GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM,
+                    intArrayOf(
+                        Color.argb(190, 220, 240, 255),
+                        Color.argb(105, 115, 165, 235),
+                        Color.argb(135, 70, 115, 190)
+                    )
+                ).apply {
+                    cornerRadius = dp(24).toFloat()
+                    setStroke(dp(1), Color.argb(190, 255, 255, 255))
+                }
                 elevation = dp(2).toFloat()
                 addView(
                     controlGlyph(kind),
@@ -1464,7 +1494,7 @@ class MainActivity : Activity() {
         }
 
         addPair(
-            Triple("Wi-Fi", android.provider.Settings.ACTION_WIFI_SETTINGS, "wifi"),
+            Triple("Wi-Fi", android.provider.Settings.Panel.ACTION_WIFI, "wifi"),
             Triple("Bluetooth", android.provider.Settings.ACTION_BLUETOOTH_SETTINGS, "bluetooth")
         )
 
@@ -1495,9 +1525,17 @@ class MainActivity : Activity() {
             return LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
                 setPadding(dp(12), dp(5), dp(12), dp(5))
-                background = rounded(
-                    Color.argb(75, 145, 180, 230), 18f
-                )
+                background = GradientDrawable(
+                    GradientDrawable.Orientation.TL_BR,
+                    intArrayOf(
+                        Color.argb(105, 195, 225, 255),
+                        Color.argb(65, 100, 150, 220),
+                        Color.argb(90, 55, 95, 160)
+                    )
+                ).apply {
+                    cornerRadius = dp(18).toFloat()
+                    setStroke(dp(1), Color.argb(145, 235, 247, 255))
+                }
                 addView(
                     slider,
                     LinearLayout.LayoutParams(
@@ -1507,20 +1545,20 @@ class MainActivity : Activity() {
             }
         }
 
-        addSectionLabel("☀  Kecerahan launcher")
+        addSectionLabel("☀  Kecerahan sistem")
 
-        val currentBrightness = window.attributes.screenBrightness
         val brightness = SeekBar(this).apply {
-            max = 100
-            progress = if (currentBrightness < 0f) {
-                50
-            } else {
-                (currentBrightness * 100).toInt().coerceIn(1, 100)
+            max = 255
+            progress = try {
+                android.provider.Settings.System.getInt(
+                    contentResolver,
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS
+                ).coerceIn(1, 255)
+            } catch (_: Exception) {
+                128
             }
-            progressTintList =
-                android.content.res.ColorStateList.valueOf(Color.WHITE)
-            thumbTintList =
-                android.content.res.ColorStateList.valueOf(Color.WHITE)
+            progressTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
+            thumbTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
 
             setOnSeekBarChangeListener(
                 object : SeekBar.OnSeekBarChangeListener {
@@ -1529,13 +1567,38 @@ class MainActivity : Activity() {
                         value: Int,
                         fromUser: Boolean
                     ) {
-                        val params = window.attributes
-                        params.screenBrightness =
-                            if (value == 0) 0.01f else value / 100f
-                        window.attributes = params
+                        if (fromUser && android.provider.Settings.System.canWrite(this@MainActivity)) {
+                            runCatching {
+                                android.provider.Settings.System.putInt(
+                                    contentResolver,
+                                    android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE,
+                                    android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL
+                                )
+                                android.provider.Settings.System.putInt(
+                                    contentResolver,
+                                    android.provider.Settings.System.SCREEN_BRIGHTNESS,
+                                    value.coerceIn(1, 255)
+                                )
+                            }
+                        }
                     }
 
-                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                        if (!android.provider.Settings.System.canWrite(this@MainActivity)) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Izinkan akses ubah pengaturan agar kecerahan sistem bisa diatur",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            startActivity(
+                                Intent(
+                                    android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                                    android.net.Uri.parse("package:$packageName")
+                                )
+                            )
+                        }
+                    }
+
                     override fun onStopTrackingTouch(seekBar: SeekBar?) {}
                 }
             )
@@ -1594,11 +1657,11 @@ class MainActivity : Activity() {
 
         dialog.window?.apply {
             setBackgroundDrawableResource(android.R.color.transparent)
-            setDimAmount(0.38f)
+            setDimAmount(0.28f)
 
             if (android.os.Build.VERSION.SDK_INT >= 31) {
                 addFlags(android.view.WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-                setBackgroundBlurRadius(dp(28))
+                setBackgroundBlurRadius(dp(48))
             }
         }
 
