@@ -1089,7 +1089,10 @@ class MainActivity : Activity() {
                     setOnClickListener { launch(app) }
                 }
 
-                cell.tag = app.loadLabel(packageManager).toString().lowercase()
+                cell.tag = (
+                    app.loadLabel(packageManager).toString() + " " +
+                        app.activityInfo.packageName
+                ).lowercase()
 
                 cell.addView(
                     liquidIcon(app),
@@ -1154,10 +1157,10 @@ class MainActivity : Activity() {
                 } else {
                     appPages.indexOfFirst { pageApps ->
                         pageApps.any { app ->
-                            app.loadLabel(packageManager)
-                                .toString()
-                                .lowercase()
-                                .contains(query)
+                            (
+                                app.loadLabel(packageManager).toString() + " " +
+                                    app.activityInfo.packageName
+                            ).lowercase().contains(query)
                         }
                     }
                 }
