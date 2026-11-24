@@ -822,6 +822,10 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+        window.setBackgroundDrawable(
+            android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)
+        )
         window.statusBarColor = Color.rgb(18, 39, 91)
         window.navigationBarColor = Color.rgb(12, 27, 66)
         window.decorView.systemUiVisibility = 0
@@ -866,15 +870,7 @@ class MainActivity : Activity() {
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(18), dp(12), dp(18), dp(14))
-            background = GradientDrawable(
-                GradientDrawable.Orientation.TL_BR,
-                intArrayOf(
-                    Color.rgb(12, 36, 91),
-                    Color.rgb(42, 104, 190),
-                    Color.rgb(20, 39, 100),
-                    Color.rgb(8, 19, 55)
-                )
-            )
+            background = android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)
         }
 
         date = TextView(this).apply {
