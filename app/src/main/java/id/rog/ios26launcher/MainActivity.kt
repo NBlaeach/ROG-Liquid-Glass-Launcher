@@ -216,10 +216,10 @@ class MainActivity : Activity() {
                 line.alpha = 235
                 line.strokeWidth = 7f
 
-                // Kedalaman lembut khusus untuk logo vektor
+                // Gunakan ikon aplikasi asli di atas latar Liquid Glass
                 fill.setShadowLayer(1.8f, 0f, 1.2f, 0x66000000)
 
-                when (kind) {
+                when ("__use_native_app_icons__") {
                     "binance" -> {
                         fill.color = Color.rgb(245, 190, 55)
                         fun diamond(x: Float, y: Float, r: Float) {
@@ -1242,10 +1242,6 @@ class MainActivity : Activity() {
 
         dockApps.forEach { app ->
             val tile = FrameLayout(this).apply {
-                background = rounded(
-                    Color.argb(38, 255, 255, 255), 18f
-                )
-                clipToOutline = true
                 contentDescription = app.loadLabel(packageManager).toString()
                 setOnClickListener { launch(app) }
             }
