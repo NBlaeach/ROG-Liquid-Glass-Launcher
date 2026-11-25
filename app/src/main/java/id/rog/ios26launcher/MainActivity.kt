@@ -911,7 +911,31 @@ class MainActivity : Activity() {
     }
 
     private fun renderHome() {
-        val root = LinearLayout(this).apply {
+        var homeSwipe: ((Float) -> Unit)? = null
+        val root = object : LinearLayout(this) {
+            var startX = 0f
+            var startY = 0f
+
+            override fun onInterceptTouchEvent(e: android.view.MotionEvent): Boolean {
+                if (e.actionMasked == 0) {
+                    startX = e.x
+                    startY = e.y
+                }
+                if (e.actionMasked == 2) {
+                    val dx = e.x - startX
+                    val dy = e.y - startY
+                    if (kotlin.math.abs(dx) > dp(45) &&
+                        kotlin.math.abs(dx) > kotlin.math.abs(dy) * 1.2f
+                    ) return true
+                }
+                return super.onInterceptTouchEvent(e)
+            }
+
+            override fun onTouchEvent(e: android.view.MotionEvent): Boolean {
+                if (e.actionMasked == 1) homeSwipe?.invoke(e.x - startX)
+                return true
+            }
+        }.apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(18), dp(12), dp(18), dp(14))
             background = android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)
@@ -1176,6 +1200,23 @@ class MainActivity : Activity() {
 
         pageDots.text = (0 until pages.childCount).joinToString("  ") {
             if (it == 0) "●" else "○"
+        }
+
+        homeSwipe = { dx ->
+            val target = pages.displayedChild + if (dx < 0) 1 else -1
+            if (target in 0 until pages.childCount && root.width > 0) {
+                val direction = if (dx < 0) -1f else 1f
+                root.animate().cancel()
+                root.animate().translationX(direction * root.width)
+                    .setDuration(180).withEndAction {
+                        pages.displayedChild = target
+                        pageDots.text = (0 until pages.childCount).joinToString("  ") {
+                            if (it == target) "●" else "○"
+                        }
+                        root.translationX = -direction * root.width
+                        root.animate().translationX(0f).setDuration(220).start()
+                    }.start()
+            }
         }
 
         search.addTextChangedListener(object : android.text.TextWatcher {
