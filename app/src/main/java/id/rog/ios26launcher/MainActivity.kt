@@ -916,6 +916,10 @@ class MainActivity : Activity() {
             var startX = 0f
             var startY = 0f
 
+            override fun requestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+                super.requestDisallowInterceptTouchEvent(false)
+            }
+
             override fun onInterceptTouchEvent(e: android.view.MotionEvent): Boolean {
                 if (e.actionMasked == 0) {
                     startX = e.x
